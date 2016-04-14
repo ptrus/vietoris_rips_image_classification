@@ -5,3 +5,7 @@ def do_all(items, f):
     if type(items) == list:
         return [f(i) for i in items]
     return f(items)
+
+def flatten(lst):
+    """ Flatten shallow list LST. """
+    return [e for l2 in lst for e in l2]
