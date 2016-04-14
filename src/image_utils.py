@@ -1,6 +1,7 @@
 import Image
 from os import listdir
 from utils import *
+import numpy as np
 
 
 def load_all_images(directory):
@@ -16,11 +17,16 @@ def resize(images, size):
     """ Resize all IMAGES to SIZE. """
     return do_all(images, lambda i: i.resize(size, Image.ANTIALIAS))
 
+def to_grayscale(images):
+    """ Convert IMAGES to grayscale. """
+    return do_all(images, lambda i: i.convert('L'))
 
-def to_black_and_white(images):
-    """ Convert images to black and white. """
-    return do_all(images, lambda i: i.convert('LA'))
-
+def to_vector(images):
+    """ Convert IMAGES to one-dimensional vectors, with elements of the vector
+    being either tuples in case of color image, or just integers for grayscale
+    images.
+    """
+    return do_all(images, lambda i: np.copy(np.asarray(i.getdata())))
 
 if __name__ == "__main__":
     import sys
@@ -36,5 +42,5 @@ if __name__ == "__main__":
     w, h = map(int, size.split('x'))
     imgs = load_all_images(load_dir)
     imgs = resize(imgs, (w, h))
-    imgs = to_black_and_white(imgs)
+    imgs = to_grayscale(imgs)
     save_all_images(imgs, save_dir)
