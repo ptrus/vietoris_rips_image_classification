@@ -4,4 +4,4 @@ def do_all(items, f):
     """
     if type(items) == list:
         return [f(i) for i in items]
-    return f(i)
+    return f(items)
