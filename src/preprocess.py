@@ -5,7 +5,8 @@ from dataset import load_dataset
 
 class Preprocess(BaseEstimator, TransformerMixin):
     """ Class used for preprocessing dataset x.
-        Standard scaling and PCA are performed.
+        Standard scaling and PCA transformation
+        are performed.
 
         Args:
         pca_n: if integer, pca_n main components are selected
@@ -40,7 +41,7 @@ if __name__ == '__main__':
 
     x,y = load_dataset(['../data/tea_cup', '../data/spoon'])
 
-    # Test fit -> transform and fit_transform
+    # Test fit -> transform vs fit_transform
     p = Preprocess(0.7)
     p.fit(x)
     x2 = p.transform(x)
@@ -52,5 +53,4 @@ if __name__ == '__main__':
     p2 = Preprocess()
     x4 = p2.fit_transform(x)
     x5 = p2.inverse_transform(x4)
-
     assert np.all(np.isclose(x5, x))
