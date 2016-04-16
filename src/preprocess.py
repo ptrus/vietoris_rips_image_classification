@@ -8,9 +8,9 @@ class Preprocess(BaseEstimator, TransformerMixin):
         Standard scaling and PCA are performed.
 
         Args:
-        pca_n: if integer, pca_n main components are kept.
-               if 0<pca_n<1, selects n components that the  amount
-               of explained variance is greater than pca_n
+        pca_n: if integer, pca_n main components are selected
+               if 0 < pca_n < 1, selects n components so that
+               the fraction of explained variance is greater than pca_n
     """
 
     def __init__(self, pca_n=None):
