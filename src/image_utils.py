@@ -1,6 +1,6 @@
 import Image
 from os import listdir
-from utils import *
+from utils import do_one_or_list
 import numpy as np
 
 
@@ -15,26 +15,26 @@ def save_all_images(images, directory):
 
 def resize(images, size):
     """ Resize all IMAGES to SIZE. """
-    return do_all(images, lambda i: i.resize(size, Image.ANTIALIAS))
+    return do_one_or_list(images, lambda i: i.resize(size, Image.ANTIALIAS))
 
 def to_grayscale(images):
     """ Convert IMAGES to grayscale. """
-    return do_all(images, lambda i: i.convert('L'))
+    return do_one_or_list(images, lambda i: i.convert('L'))
 
 def to_vector(images):
     """ Convert IMAGES to one-dimensional vectors, with elements of the vector
     being either tuples in case of color image, or just integers for grayscale
     images.
     """
-    return do_all(images, lambda i: np.copy(np.asarray(i.getdata())))
+    return do_one_or_list(images, lambda i: np.copy(np.asarray(i.getdata())))
 
 def to_image(vectors, size):
-    """ Reshape one-dimensional image VECTORS to SIZE and convert them to
-    python image objects.
+    """ Reshape one-dimensional (grayscale) image VECTORS to SIZE and convert
+    them to python image objects.
     """
     size = (size[1], size[0])
-    resized = do_all(vectors, lambda v: v.reshape(size).astype(np.uint8))
-    return do_all(resized, lambda v: Image.fromarray(v))
+    resized = do_one_or_list(vectors, lambda v: v.reshape(size).astype(np.uint8))
+    return do_one_or_list(resized, lambda v: Image.fromarray(v))
 
 if __name__ == "__main__":
     import sys

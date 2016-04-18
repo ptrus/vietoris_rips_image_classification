@@ -1,10 +1,10 @@
-def do_all(items, f):
-    """ Apply F on either every element of ITEMS, if ITEMS is a list, or just
-    on ITEMS as a single element otherwise.
+def do_one_or_list(item, f):
+    """ Apply F on either every element of ITEM, if ITEM is a list, or just
+    on ITEM as a single element otherwise.
     """
-    if type(items) == list:
-        return [f(i) for i in items]
-    return f(items)
+    if type(item) == list:
+        return map(f, item)
+    return f(item)
 
 def flatten(lst):
     """ Flatten shallow list LST. """
