@@ -28,6 +28,14 @@ def to_vector(images):
     """
     return do_all(images, lambda i: np.copy(np.asarray(i.getdata())))
 
+def to_image(vectors, size):
+    """ Reshape one-dimensional image VECTORS to SIZE and convert them to
+    python image objects.
+    """
+    size = (size[1], size[0])
+    resized = do_all(vectors, lambda v: v.reshape(size).astype(np.uint8))
+    return do_all(resized, lambda v: Image.fromarray(v))
+
 if __name__ == "__main__":
     import sys
     if len(sys.argv) != 4:
