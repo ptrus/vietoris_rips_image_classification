@@ -1,39 +1,35 @@
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.decomposition import PCA
-from dataset import load_dataset
 import numpy as np
 
 class Scaler(BaseEstimator, TransformerMixin):
     """ Class used for scaling the dataset x.
-        Removes the mean and than scales to unit variance.
+        Removes the mean and than scales to values from [-1, 1].
         Implements inverse_transform method.
         
         Args:
         axis: if 1, standardize samples (rows)
               if 0, standardize features (columns)
-    """    
-    
+    """
+
     def __init__(self, axis=1):
         assert axis in [0,1]
         self.axis = axis
-        
+
     def fit(self, x):
-        if self.axis:
-            self.means = np.mean(x, self.axis).reshape((len(x), 1))
-            self.stds = np.std(x, self.axis).reshape((len(x), 1))
-        else:
-            self.means = np.mean(x, self.axis).reshape((1, len(x)))
-            self.stds = np.std(x, self.axis).reshape((1, len(x)))
-            
+        shape = (len(x), 1) if self.axis == 1 else (1, len(x[0]))
+        self.means = np.mean(x, self.axis).reshape(shape)
+        self.maxs = np.max(np.abs(x - self.means), self.axis).reshape(shape)
+
     def transform(self, x):
-        return (x - self.means)/self.stds
-        
+        return np.nan_to_num((x - self.means)/self.maxs)
+
     def fit_transform(self, x):
         self.fit(x)
         return self.transform(x)
-        
+
     def inverse_transform(self, x):
-        return (x*self.stds) + self.means
+        return (x*self.maxs) + self.means
 
 class Preprocess(BaseEstimator, TransformerMixin):
     """ Class used for preprocessing dataset x.
@@ -74,7 +70,7 @@ class Preprocess(BaseEstimator, TransformerMixin):
 
 
 if __name__ == '__main__':
-
+    from dataset import load_dataset
     x,y = load_dataset(['../data/tea_cup', '../data/spoon'])
 
     # Test fit -> transform vs fit_transform
