@@ -1,3 +1,6 @@
+from utils import do_one_or_list
+
+
 def fix_labels((V, E)):
     """ Number elements in a list (of lists) E (labels of edges) so that
     they are numbered from 0 to (|V|-1).
@@ -36,3 +39,4 @@ if __name__ == "__main__":
     V = "abcdefghi"
     E = map(list, ["ab", "ac", "bc", "cg", "ef"])
     print connected_components((V, E))
+    print n_connected_components((V, E))
