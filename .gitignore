@@ -1,5 +1,6 @@
 # Dionysus folder
 src/dionysus/
+src/dionysus
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
