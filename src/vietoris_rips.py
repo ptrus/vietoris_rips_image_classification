@@ -1,6 +1,5 @@
 from dionysus import Rips, PairwiseDistances, Filtration
 
-from dataset import load_dataset
 from preprocess import Preprocess
 
 def vietoris_rips(points, skeleton, max, distances = None):
@@ -21,6 +20,7 @@ def vietoris_rips(points, skeleton, max, distances = None):
     return [list(simplex.vertices) for simplex in simplices]
 
 if __name__ == '__main__':
+    from dataset import load_dataset
     x,y = load_dataset(['../data/tea_cup', '../data/spoon', '../data/apple'])
 
     p = Preprocess(0.7)

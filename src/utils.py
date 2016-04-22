@@ -9,3 +9,11 @@ def do_one_or_list(item, f):
 def flatten(lst):
     """ Flatten shallow list LST. """
     return [e for l2 in lst for e in l2]
+
+def linear_search(n, arr, fn, err=-1):
+    """ Search for FN(i) = N in for i in ARR linearly and return ERR if no such
+    i exists. """
+    for i in arr:
+        if fn(i) == n:
+            return i
+    return -1

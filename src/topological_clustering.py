@@ -7,11 +7,17 @@ Created on Fri Apr 22 12:29:53 2016
 
 from sklearn.base import BaseEstimator, TransformerMixin
 import numpy as np
-from dionysus import Rips, PairwiseDistances, Filtration
+from dionysus import Rips, PairwiseDistances, ExplicitDistances, Filtration
 from vietoris_rips import vietoris_rips
-from connected_components import connected_components
+from connected_components import connected_components, n_connected_components
+from preprocess import Preprocess
+from utils import linear_search
 
-class Topo_Cluster(BaseEstimator, TransformerMixin):
+def filter_simplices(cx, dim):
+    """ Only keep simplices in complex CX of dimension DIM. """
+    return filter(lambda sx: len(sx) == dim+1, cx)
+
+class TopologicalClustering(BaseEstimator, TransformerMixin):
     
     """Clustering class.
        Takes points in reduced space (PCA performed on original representation)
@@ -24,30 +30,37 @@ class Topo_Cluster(BaseEstimator, TransformerMixin):
            "ALPHA": usin alpha-shapes
     """
     
-    def __init__(self, n_clusters, method="VR"):
+    def __init__(self, n_clusters, method="VR", skeleton=1):
         assert method in ["VR", "ALPHA"]
         self.n_clusters = n_clusters
         self.method = method
-        
-    def fit(self, X, skeleton=1, distances=None):
         self.skeleton = skeleton
-        self.distances = distances
+        
+    def fit(self, X):
+        distances = PairwiseDistances(X.tolist())
+        distances = ExplicitDistances(distances)
+        n_samples = len(X)
+        r_candidates = sorted(set(np.array(distances.distances).flatten()))
         if self.method == "VR":
-            #Calculate the max cutoff value so that the VR complex has self.k con. comp.
-            self.r2 = 10 #Plug in Andrejs function
-            #Calculate the min cutoff value so that the VR complex has 1 con. comp.
-            self.r1 = 10 #Pluf in Andrejs function
+            self.r1 = linear_search(1, reversed(r_candidates), lambda r: n_connected_components((range(n_samples), filter_simplices(vietoris_rips(X.tolist(), self.skeleton, r), 1))))
+            self.r2 = linear_search(self.n_clusters, r_candidates, lambda r: n_connected_components((range(n_samples), filter_simplices(vietoris_rips(X.tolist(), self.skeleton, r), 1))))
+
         if self.method == "ALPHA":
-            #Calculate some sort of parameters for alpha shapes
-            self.r2 = 10
-            self.r1 = 10
+            raise Exception('support for alpha shapes not yet implemented')
     
     def predict(self, X):
-        simplices = vietoris_rips(X, self.skeleton,  self.r2) #list of lists (points and edges)
-        V = range(len(X))
-        E = filter(lambda sx: len(sx) == 2, simplices)
-        cc = connected_components((V,E))
+        cx = vietoris_rips(X.tolist(), self.skeleton, self.r2)
+        n_samples = len(X)
+        cc = connected_components((range(n_samples), filter_simplices(cx, 1)))
         return cc
-        
-        
-        
+
+if __name__ == '__main__':
+    from dataset import load_dataset
+    X,Y = load_dataset(['../data/tea_cup', '../data/spoon'])
+
+    p = Preprocess(0.7)
+    X = p.fit_transform(X)
+
+    tc = TopologicalClustering(2)
+    tc.fit(X)
+    print tc.predict(X)
