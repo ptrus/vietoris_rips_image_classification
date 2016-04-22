@@ -55,12 +55,20 @@ class TopologicalClustering(BaseEstimator, TransformerMixin):
         return connected_components((range(n_samples), filter_simplices(cx, self.skeleton)))
 
 if __name__ == '__main__':
+    # from sklearn.datasets import load_iris
+    # from sklearn.cross_validation import train_test_split
+    # X = load_iris()['data']
+    # y = load_iris()['target']
+    # X, _, y, _ = train_test_split(X, y, test_size=0.75)
+
     from dataset import load_dataset
-    X,Y = load_dataset(['../data/tea_cup', '../data/spoon'])
+    X,Y = load_dataset(['../data/tea_cup', '../data/spoon', '../data/apple'])
 
     p = Preprocess(0.7)
     X = p.fit_transform(X)
+    print len(X[0])
 
-    tc = TopologicalClustering(2)
+    tc = TopologicalClustering(3)
     tc.fit(X)
-    print tc.predict(X)
+    print np.array(tc.predict(X))
+    # print y
