@@ -42,17 +42,17 @@ class TopologicalClustering(BaseEstimator, TransformerMixin):
         n_samples = len(X)
         r_candidates = sorted(set(np.array(distances.distances).flatten()))
         if self.method == "VR":
-            self.r1 = linear_search(1, reversed(r_candidates), lambda r: n_connected_components((range(n_samples), filter_simplices(vietoris_rips(X.tolist(), self.skeleton, r), 1))))
-            self.r2 = linear_search(self.n_clusters, r_candidates, lambda r: n_connected_components((range(n_samples), filter_simplices(vietoris_rips(X.tolist(), self.skeleton, r), 1))))
-
+            n_cc_for_vr =  lambda r: n_connected_components((range(n_samples), filter_simplices(vietoris_rips(X.tolist(), self.skeleton, r), self.skeleton)))
+            self.r1 = linear_search(1, r_candidates, n_cc_for_vr)
+            self.r2 = linear_search(self.n_clusters, reversed(r_candidates), n_cc_for_vr)
         if self.method == "ALPHA":
             raise Exception('support for alpha shapes not yet implemented')
     
     def predict(self, X):
         cx = vietoris_rips(X.tolist(), self.skeleton, self.r2)
         n_samples = len(X)
-        cc = connected_components((range(n_samples), filter_simplices(cx, 1)))
-        return cc
+        print cx
+        return connected_components((range(n_samples), filter_simplices(cx, self.skeleton)))
 
 if __name__ == '__main__':
     from dataset import load_dataset
