@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
     from dataset import load_dataset
     #X,Y = load_dataset(['../data/tea_cup', '../data/spoon', '../data/apple'])
-    X,Y = load_dataset(['../test_set/tea_cup', '../test_set/tea_bag'])
+    X,Y = load_dataset(['../train_set/tea_cup', '../train_set/tea_bag'])
 
     p = Preprocess(0.95)
     X = p.fit_transform(X)
