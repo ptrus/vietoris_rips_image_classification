@@ -12,6 +12,8 @@ from vietoris_rips import vietoris_rips
 from connected_components import connected_components, n_connected_components
 from preprocess import Preprocess
 from utils import linear_search
+from sklearn import metrics
+from sklearn.cluster import AgglomerativeClustering
 
 def filter_simplices(cx, dim):
     """ Only keep simplices in complex CX of dimension DIM. """
@@ -62,13 +64,19 @@ if __name__ == '__main__':
     # X, _, y, _ = train_test_split(X, y, test_size=0.75)
 
     from dataset import load_dataset
-    X,Y = load_dataset(['../data/tea_cup', '../data/spoon', '../data/apple'])
+    #X,Y = load_dataset(['../data/tea_cup', '../data/spoon', '../data/apple'])
+    X,Y = load_dataset(['../test_set/tea_cup', '../test_set/tea_bag'])
 
-    p = Preprocess(0.7)
+    p = Preprocess(0.95)
     X = p.fit_transform(X)
     print len(X[0])
 
-    tc = TopologicalClustering(3)
+    tc = TopologicalClustering(2)
     tc.fit(X)
+    pred = tc.predict(X)
     print np.array(tc.predict(X))
+    print "Score:", metrics.adjusted_rand_score(Y, pred)
+    ac = AgglomerativeClustering(2)
+    sklearn_pred = ac.fit_predict(X)
+    print "Benchmark score:", metrics.adjusted_rand_score(Y, sklearn_pred)
     # print y
