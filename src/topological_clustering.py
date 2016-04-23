@@ -14,31 +14,39 @@ from preprocess import Preprocess
 from utils import linear_search
 from sklearn import metrics
 from sklearn.cluster import AgglomerativeClustering
+from visualisation import mds_plot, lines_plot
+from matplotlib import pyplot as plt
 
 def filter_simplices(cx, dim):
     """ Only keep simplices in complex CX of dimension DIM. """
     return filter(lambda sx: len(sx) == dim+1, cx)
 
 class TopologicalClustering(BaseEstimator, TransformerMixin):
-    
+
     """Clustering class.
        Takes points in reduced space (PCA performed on original representation)
        and uses the chosen method to construct clusters.
-       
+
        Args:
        k: number of clusters we want to construct
        method: a topological method used to find clusters
            "VR": using a Vietoris-Ribs complex
            "ALPHA": usin alpha-shapes
     """
-    
-    def __init__(self, n_clusters, method="VR", skeleton=1):
+
+    def __init__(self, n_clusters, method="VR", skeleton=1, plot=False):
         assert method in ["VR", "ALPHA"]
         self.n_clusters = n_clusters
         self.method = method
         self.skeleton = skeleton
-        
-    def fit(self, X):
+        self.plot = plot
+        self.cords = []
+
+    def fit(self, X, y=[]):
+        ''' y is only used for plotting purposes '''
+        if self.plot:
+            self.cords = mds_plot(X, y)
+
         distances = PairwiseDistances(X.tolist())
         distances = ExplicitDistances(distances)
         n_samples = len(X)
@@ -49,11 +57,14 @@ class TopologicalClustering(BaseEstimator, TransformerMixin):
             self.r2 = linear_search(self.n_clusters, reversed(r_candidates), n_cc_for_vr)
         if self.method == "ALPHA":
             raise Exception('support for alpha shapes not yet implemented')
-    
+
     def predict(self, X):
         cx = vietoris_rips(X.tolist(), self.skeleton, self.r2)
         n_samples = len(X)
         print cx
+        if self.plot:
+            lines_plot(cx, self.cords)
+            plt.show()
         return connected_components((range(n_samples), filter_simplices(cx, self.skeleton)))
 
 if __name__ == '__main__':
@@ -71,8 +82,8 @@ if __name__ == '__main__':
     X = p.fit_transform(X)
     print len(X[0])
 
-    tc = TopologicalClustering(2)
-    tc.fit(X)
+    tc = TopologicalClustering(2, plot=True)
+    tc.fit(X,Y)
     pred = tc.predict(X)
     print np.array(tc.predict(X))
     print "Score:", metrics.adjusted_rand_score(Y, pred)
