@@ -68,26 +68,29 @@ class TopologicalClustering(BaseEstimator, TransformerMixin):
         return connected_components((range(n_samples), filter_simplices(cx, self.skeleton)))
 
 if __name__ == '__main__':
-    # from sklearn.datasets import load_iris
-    # from sklearn.cross_validation import train_test_split
-    # X = load_iris()['data']
-    # y = load_iris()['target']
-    # X, _, y, _ = train_test_split(X, y, test_size=0.75)
+    from sklearn.datasets import load_iris
+    from sklearn.cross_validation import train_test_split
+    X = load_iris()['data']
+    y = load_iris()['target']
+    X = X[np.arange(0,100,5),:]
+    y = y[np.arange(0,100,5)]
+##    X, _, y, _ = train_test_split(X, y, test_size=0.75)
+    print y
 
-    from dataset import load_dataset
+##    from dataset import load_dataset
     #X,Y = load_dataset(['../data/tea_cup', '../data/spoon', '../data/apple'])
-    X,Y = load_dataset(['../train_set/tea_cup', '../train_set/tea_bag'])
+##    X,Y = load_dataset(['../train_set/tea_cup', '../train_set/tea_bag'])
 
     p = Preprocess(0.95)
     X = p.fit_transform(X)
     print len(X[0])
 
     tc = TopologicalClustering(2, plot=True)
-    tc.fit(X,Y)
+    tc.fit(X,y)
     pred = tc.predict(X)
     print np.array(tc.predict(X))
-    print "Score:", metrics.adjusted_rand_score(Y, pred)
+    print "Score:", metrics.adjusted_rand_score(y, pred)
     ac = AgglomerativeClustering(2)
     sklearn_pred = ac.fit_predict(X)
-    print "Benchmark score:", metrics.adjusted_rand_score(Y, sklearn_pred)
+    print "Benchmark score:", metrics.adjusted_rand_score(y, sklearn_pred)
     # print y
