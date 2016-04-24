@@ -16,12 +16,12 @@ def mds_plot(points, target):
 
     return coords
 
-def lines_plot(lines, cords):
+def lines_plot(lines, cords, color='r'):
     lines = [line for line in lines if len(line) == 2]
     for line in lines:
         if len(line) != 2: continue
         [p1,p2] = line
-        plt.plot([cords[p1, 0], cords[p2, 0]], [cords[p1, 1], cords[p2, 1]], color='r')
+        plt.plot([cords[p1, 0], cords[p2, 0]], [cords[p1, 1], cords[p2, 1]], color=color)
 
 if __name__ == '__main__':
     from dataset import load_dataset
