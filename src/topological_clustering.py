@@ -13,7 +13,6 @@ from connected_components import connected_components, n_connected_components
 from preprocess import Preprocess
 from utils import linear_search
 from sklearn import metrics
-from sklearn.cluster import AgglomerativeClustering
 from visualisation import mds_plot, lines_plot
 from matplotlib import pyplot as plt
 
@@ -61,36 +60,42 @@ class TopologicalClustering(BaseEstimator, TransformerMixin):
     def predict(self, X):
         cx = vietoris_rips(X.tolist(), self.skeleton, self.r2)
         n_samples = len(X)
-        print cx
         if self.plot:
             lines_plot(cx, self.cords)
             plt.show()
-        return connected_components((range(n_samples), filter_simplices(cx, self.skeleton)))
+        return np.array(connected_components((range(n_samples), filter_simplices(cx, self.skeleton))))
+
 
 if __name__ == '__main__':
-    from sklearn.datasets import load_iris
+    n_clusters = 3
+    # from sklearn.datasets import load_iris
+    # X = load_iris()['data']
+    # y = load_iris()['target']
+    # X = X[np.arange(0,100,5),:]
+    # y = y[np.arange(0,100,5)]
+
+# Load data
     from sklearn.cross_validation import train_test_split
-    X = load_iris()['data']
-    y = load_iris()['target']
-    X = X[np.arange(0,100,5),:]
-    y = y[np.arange(0,100,5)]
-##    X, _, y, _ = train_test_split(X, y, test_size=0.75)
-    print y
+    from dataset import load_dataset
+    X,y = load_dataset(['../data/tea_cup', '../data/spoon', '../data/apple'])
+    X, _, y, _ = train_test_split(X, y, test_size=0.75)
+    print "True classes:             ", y
 
-##    from dataset import load_dataset
-    #X,Y = load_dataset(['../data/tea_cup', '../data/spoon', '../data/apple'])
-##    X,Y = load_dataset(['../train_set/tea_cup', '../train_set/tea_bag'])
-
-    p = Preprocess(0.95)
+# Preprocess data
+    p = Preprocess(0.7)
     X = p.fit_transform(X)
-    print len(X[0])
 
-    tc = TopologicalClustering(2, plot=True)
+# Apply topological clustering
+    tc = TopologicalClustering(n_clusters)
     tc.fit(X,y)
-    pred = tc.predict(X)
-    print np.array(tc.predict(X))
-    print "Score:", metrics.adjusted_rand_score(y, pred)
-    ac = AgglomerativeClustering(2)
-    sklearn_pred = ac.fit_predict(X)
-    print "Benchmark score:", metrics.adjusted_rand_score(y, sklearn_pred)
-    # print y
+    topo_pred = tc.predict(X)
+    print "Topological clustering:   ", topo_pred
+
+    import scipy.spatial.distance as ssd
+    from scipy.cluster.hierarchy import linkage, fcluster
+    distances = PairwiseDistances(X.tolist())
+    distances = ExplicitDistances(distances)
+    singlel_pred = fcluster(linkage(ssd.squareform(distances.distances)), n_clusters, criterion='maxclust')
+    print "Single-linkage clustering:", singlel_pred
+
+    print "Similarity between two predictions:", metrics.adjusted_rand_score(topo_pred, singlel_pred)
