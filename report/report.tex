@@ -1,0 +1,285 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Programming/Coding Assignment
+% LaTeX Template
+%
+% This template has been downloaded from:
+% http://www.latextemplates.com
+%
+% Original author:
+% Ted Pavlic (http://www.tedpavlic.com)
+%
+% Note:
+% The \lipsum[#] commands throughout this template generate dummy text
+% to fill the template out. These commands should all be removed when 
+% writing assignment content.
+%
+% This template uses a Perl script as an example snippet of code, most other
+% languages are also usable. Configure them in the "CODE INCLUSION 
+% CONFIGURATION" section.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass{article}
+
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{lastpage} % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage[usenames,dvipsnames]{color} % Required for custom colors
+\usepackage{graphicx} % Required to insert images
+\usepackage{listings} % Required for insertion of code
+\usepackage{courier} % Required for the courier font
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsthm,amsmath,amssymb}
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1} % Line spacing
+
+% Set up the header and footer
+\pagestyle{fancy}
+\lhead{\hmwkTitle} % Top left header
+%\chead{\hmwkClass\ (\hmwkClassInstructor\ \hmwkClassTime): \hmwkTitle} % Top center head
+%\rhead{\firstxmark} % Top right header
+\lfoot{\lastxmark} % Bottom left footer
+\cfoot{} % Bottom center footer
+\rfoot{Page\ \thepage\ of\ \protect\pageref{LastPage}} % Bottom right footer
+\renewcommand\headrulewidth{0.4pt} % Size of the header rule
+\renewcommand\footrulewidth{0.4pt} % Size of the footer rule
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+%----------------------------------------------------------------------------------------
+%	CODE INCLUSION CONFIGURATION
+%----------------------------------------------------------------------------------------
+
+\definecolor{MyDarkGreen}{rgb}{0.0,0.4,0.0} % This is the color used for comments
+\lstloadlanguages{Perl} % Load Perl syntax for listings, for a list of other languages supported see: ftp://ftp.tex.ac.uk/tex-archive/macros/latex/contrib/listings/listings.pdf
+\lstset{language=Perl, % Use Perl in this example
+        frame=single, % Single frame around code
+        basicstyle=\small\ttfamily, % Use small true type font
+        keywordstyle=[1]\color{Blue}\bf, % Perl functions bold and blue
+        keywordstyle=[2]\color{Purple}, % Perl function arguments purple
+        keywordstyle=[3]\color{Blue}\underbar, % Custom functions underlined and blue
+        identifierstyle=, % Nothing special about identifiers                                         
+        commentstyle=\usefont{T1}{pcr}{m}{sl}\color{MyDarkGreen}\small, % Comments small dark green courier font
+        stringstyle=\color{Purple}, % Strings are purple
+        showstringspaces=false, % Don't put marks in string spaces
+        tabsize=5, % 5 spaces per tab
+        %
+        % Put standard Perl functions not included in the default language here
+        morekeywords={rand},
+        %
+        % Put Perl function parameters here
+        morekeywords=[2]{on, off, interp},
+        %
+        % Put user defined functions here
+        morekeywords=[3]{test},
+       	%
+        morecomment=[l][\color{Blue}]{...}, % Line continuation (...) like blue comment
+        numbers=left, % Line numbers on left
+        firstnumber=1, % Line numbers start with line 1
+        numberstyle=\tiny\color{Blue}, % Line numbers are blue and small
+        stepnumber=5 % Line numbers go in steps of 5
+}
+
+% Creates a new command to include a perl script, the first parameter is the filename of the script (without .pl), the second parameter is the caption
+\newcommand{\perlscript}[2]{
+\begin{itemize}
+\item[]\lstinputlisting[caption=#2,label=#1]{#1.pl}
+\end{itemize}
+}
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT STRUCTURE COMMANDS
+%	Skip this unless you know what you're doing
+%----------------------------------------------------------------------------------------
+
+% Header and footer for when a page split occurs within a problem environment
+\newcommand{\enterProblemHeader}[1]{
+\nobreak\extramarks{#1}{#1 continued on next page\ldots}\nobreak
+\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
+}
+
+% Header and footer for when a page split occurs between problem environments
+\newcommand{\exitProblemHeader}[1]{
+\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
+\nobreak\extramarks{#1}{}\nobreak
+}
+
+\setcounter{secnumdepth}{0} % Removes default section numbers
+\newcounter{homeworkProblemCounter} % Creates a counter to keep track of the number of problems
+
+\newcommand{\homeworkProblemName}{}
+\newenvironment{homeworkProblem}[1][Problem \arabic{homeworkProblemCounter}]{ % Makes a new environment called homeworkProblem which takes 1 argument (custom name) but the default is "Problem #"
+\stepcounter{homeworkProblemCounter} % Increase counter for number of problems
+\renewcommand{\homeworkProblemName}{#1} % Assign \homeworkProblemName the name of the problem
+\section{\homeworkProblemName} % Make a section in the document with the custom problem count
+\enterProblemHeader{\homeworkProblemName} % Header and footer within the environment
+}{
+\exitProblemHeader{\homeworkProblemName} % Header and footer after the environment
+}
+
+\newcommand{\problemAnswer}[1]{ % Defines the problem answer command with the content as the only argument
+\noindent\framebox[\columnwidth][c]{\begin{minipage}{0.98\columnwidth}#1\end{minipage}} % Makes the box around the problem answer and puts the content inside
+}
+
+\newcommand{\homeworkSectionName}{}
+\newenvironment{homeworkSection}[1]{ % New environment for sections within homework problems, takes 1 argument - the name of the section
+\renewcommand{\homeworkSectionName}{#1} % Assign \homeworkSectionName to the name of the section from the environment argument
+\subsection{\homeworkSectionName} % Make a subsection with the custom name of the subsection
+\enterProblemHeader{\homeworkProblemName\ [\homeworkSectionName]} % Header and footer within the environment
+}{
+\enterProblemHeader{\homeworkProblemName} % Header and footer after the environment
+}
+
+%----------------------------------------------------------------------------------------
+%	NAME AND CLASS SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\hmwkTitle}{Image classification using Vietoris-Rips complex} % Assignment title
+\newcommand{\hmwkDueDate}{Friday,\ May\ 13,\ 2016} % Due date
+\newcommand{\hmwkClass}{Computational topology} % Course/class
+\newcommand{\hmwkClassTime}{} % Class/lecture time
+\newcommand{\hmwkClassInstructor}{Neža Mramor Kosta, Gregor Jerše} % Teacher/lecturer
+\newcommand{\hmwkAuthorName}{Andrej Dolenc, Peter Us, Rok Ivanšek} % Your name
+
+% Comands for theorems, definitions, other
+\newtheorem{definition}{Definition}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{
+\vspace{2in}
+\textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+\normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate}\\
+\vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}
+\vspace{3in}
+}
+
+\author{\textbf{\hmwkAuthorName}}
+\date{} % Insert date here if you want it to appear below your name
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle
+
+%----------------------------------------------------------------------------------------
+%	TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+
+%\setcounter{tocdepth}{1} % Uncomment this line if you don't want subsections listed in the ToC
+
+\newpage
+\tableofcontents
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	Obtaining and preprocessing data
+%----------------------------------------------------------------------------------------
+
+% To have just one problem per page, simply put a \clearpage after each problem
+
+\begin{homeworkProblem}[Obtaining and preprocessing data]
+Listing \ref{homework_example} shows a Perl script.
+
+\perlscript{homework_example}{Sample Perl Script With Highlighting}
+
+\lipsum[1]
+\end{homeworkProblem}
+
+%----------------------------------------------------------------------------------------
+%	The classification model
+%----------------------------------------------------------------------------------------
+
+\begin{homeworkProblem}[The classification model]
+
+\begin{definition}[Vietoris-Rips complex]
+Let $X$ be a a set of $m$-dimensional points $X \in \mathbb{R}^{m}$ and let $d$ be a metric. Pick a parameter $r > 0$. Construct a simplicial complex as follows:
+\begin{itemize}
+	\item Add a $0$-simplex for each point in $X$.
+	\item For $x_{1}, x_{2} \in X$ add a $1$-simplex between $x_{1}, x_{2}$ if $d(x_{1}, x_{2}) \leq r$.
+	\item For $x_{1}, x_{2}, x_{3} \in X$ add a $2$-simplex with vertices $x_{1}, x_{2}, x_{3}$ if $d(x_{1}, x_{2}), d(x_{1}, x_{3}), d(x_{2}, x_{3}) \leq r$.
+	\item ...
+	\item For $x_{1}, x_{2}, ... , x_{m} \in X$, add a $(m-1)$-simplex with vertices $x_{1}, x_{2}, ..., x_{m}$ if $d(x_{i}, x_{j}) \leq r$ for $0 \leq i,j \leq m$; that is, if all the points are within a distance of $r$ from each other.
+\end{itemize}
+The simplicial complex is called the Vietoris-Rips complex and is denoted $V_{r}(X)$.
+\end{definition}
+
+\lipsum[2]
+
+\begin{homeworkSection}{Relation to single linkage clustering algorithm}
+
+Our intuition tells us, that the model we build using the Vietoris-Rips complex to classify the images, produces the same results as the well known single linkage clustering algorithm. In this section we aim to prove or at least give a strong intuition that this is indeed the case.
+
+\begin{definition}
+A connected component in a graph $G(V,E)$ ($V$ is a set of vertices, $E$ a set of edges) is a set of vertices $C$ such that between every two points $a, b \in C$ there exists a path in the graph $G$ between them.
+\end{definition}
+
+Both algorithms take a set $X$ of $n$ samples with $m$ features as input. We can think of a sample $x$ in the set $X$ as a point in the $m$-dimensional space $x \in \mathbb{R}^{m}$. The algortihms then constructs a graph with points $X$ as the vertices ($V$) and edges $E$. The $k$ connected components in the constructed graph corespond to the classes of samples.
+
+\begin{paragraph}{Single linkage algorithm.}
+The algorithm starts with $n$ connected components (no edges in the graph). n each step the algorithm chooses the two connected components that are closest to each according to some distance metric $d$ (in our case the euclidean distance) and joins them into one by adding an edge between their closest two vertices. 
+
+\begin{definition}
+The distance $D$ between two connected components $A$ and $B$ is defined as the distance of the pair of vertices (one from $A$ and one from $B$) that are closest to each other. More formally
+$$D(A, B) =  \min_{a \in A, b \in B} d(a,b).$$
+\end{definition}
+
+The algorithm stops when there are only $k$ connected components left.
+
+\end{paragraph}
+
+\begin{paragraph}{Vietoris-Rips classification algorithm.}
+The algorithm builds a $1$-dimensional Vietoris-Rips complex $V_{r}(X)$ with parameter $r$. We choose the biggest $r$ such that the Vietoris-Rips complex $V_{r}(X)$ has $k$ connected components.
+\end{paragraph}
+
+\end{homeworkSection}
+
+
+%\begin{center}
+%\includegraphics[width=0.75\columnwidth]{example_figure} % Example image
+%\end{center}
+
+
+\end{homeworkProblem}
+
+
+%----------------------------------------------------------------------------------------
+%	Testing
+%----------------------------------------------------------------------------------------
+
+\begin{homeworkProblem}[Testing]
+\lipsum[3]
+\end{homeworkProblem}
+
+%----------------------------------------------------------------------------------------
+
+\begin{thebibliography}{9}
+
+\bibitem{lamport94}
+  Leslie Lamport,
+  \emph{\LaTeX: a document preparation system},
+  Addison Wesley, Massachusetts,
+  2nd edition,
+  1994.
+
+\end{thebibliography}
+
+\end{document}
