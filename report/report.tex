@@ -158,7 +158,7 @@
 
 % Comands for theorems, definitions, other
 \newtheorem{definition}{Definition}
-
+\newtheorem{claim}{Claim}
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
@@ -212,7 +212,7 @@
 
 \begin{homeworkProblem}[The classification model]
 
-\begin{definition}[Vietoris-Rips complex]
+\begin{definition}\label{defa}[Vietoris-Rips complex]
 Let $X$ be a a set of $m$-dimensional points $X \in \mathbb{R}^{m}$ and let $d$ be a metric. Pick a parameter $r > 0$. Construct a simplicial complex as follows:
 \begin{itemize}
 	\item Add a $0$-simplex for each point in $X$.
@@ -249,8 +249,29 @@ The algorithm stops when there are only $k$ connected components left.
 \end{paragraph}
 
 \begin{paragraph}{Vietoris-Rips classification algorithm.}
-The algorithm builds a $1$-dimensional Vietoris-Rips complex $V_{r}(X)$ with parameter $r$. We choose the biggest $r$ such that the Vietoris-Rips complex $V_{r}(X)$ has $k$ connected components.
+The algorithm builds a ($1$-dimensional) Vietoris-Rips complex $V_{r}(X)$ with parameter $r$. We choose the biggest $r$ such that the Vietoris-Rips complex $V_{r}(X)$ has $k$ connected components.
 \end{paragraph}
+\\
+\\
+To prove that the two algorithms indeed produce the same connected components we will first prove the next claim.
+
+\begin{claim}\label{claima}
+Let $G_{sl}(V_{sl}, E_{sl})$ be a graph produced by the single linkage algorithm for finding $k$ clusters and let $d_{max}$ denote the distance between vertices in graph $G_{sl}$ that were connected in the last iteration of the algorithm. Graph $G_{sl}$ has connected components $A_{1}...A_{k}$. The graph $G_{vr}(V_{vr}, E_{vr})$ induced by the Vietoris-Rips complex $V_{d_{max}}(V_{sl})$ has the same connected components $A_{1}...A_{k}$.
+\end{claim}
+
+\begin{proof}
+To prove that we have the exact same connected components in $G_{vr}$ as in $G_{sl}$ the following must be true for $G_{vr}$:
+\begin{enumerate}
+	\item The vertices inside $A_{i}$ are connected i.e. there exists a path between arbitrary two vertices $a, b \in A_{i}$, for every $i \in 1...k$.
+	\item The sets of vertices $A_{1},...,A_{k}$ are disconnected i.e. there isn't an edges $e(a, b)$ between a pair of two points $(a,b)$ such that $a \in A_{i}, b \in A_{j}, i \neq j$.
+\end{enumerate}
+
+From the way the algorithm for single linkage works (it is adding edges of increasing length), we can easily see that $d_{max}$ is the largest edge in the graph $G_{sl}$. From this and the definition of Vietoris-Rips (Definition~\ref{defa}) it follows that the set of edges in $G_{sl}$ is a subset of edges in $G_{vr}$ i.e. $E_{sl} \subseteq E_{vr}$. This means that all the edges found in $G_{sl}$ will also appear in $G_{vr}$ therefore the vertices inside individual subsets $A_{i}$ will indeed be connected.\\
+\\
+We prove the second part by contradiction. By definition of Vietoris-Rips complex $V_{d_{max}}(V_{sl})$, no edge $e \in E_{vr}$ will be greater than $d_{max}$. Let's now assume that there exists an edge $e$ with length $d_{e}$ between two vertices $a, b$ that are in separate subsets $a \in A_{i}$ and $b \in A_{j}$, $i \neq j$. Now we have two options. First one $d_{e} < d_{max}$. If this was the case than $d_{e}$ would necessarily have to connect two points from the same subset $A_{i}$. This follows from the fact that single linkage algorithm always connects two of the closest connected components so any edge with a length smaller than $d_{max}$ is an edge inside one of the subsets $A_{1}, ... A_{k}$. TODO: further explanation needed for the first case??? The second option is that $d_{e} > d_{max}$. This also immediately leads to a contradiction, this time with the Vietoris-Rips definition.
+\end{proof}
+
+Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G_{sl}$ are indeed the same. We need to take into account that the Vietrois-Rips algorithm takes the biggest such $r$ so that the graph has $k$ connected components, so $r > d_{max}$. But we can quickly see that the extra edges in the graph induced by $V_{r}(V_{sl})$ will not change the connected components. After all we allready have $k$ connected components in $G_{vr}$. To join two together would mean a violation of a fundemental rule of the algorithm.
 
 \end{homeworkSection}
 
