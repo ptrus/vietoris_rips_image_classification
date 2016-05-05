@@ -191,6 +191,14 @@
 \newpage
 
 %----------------------------------------------------------------------------------------
+%	Project description
+%----------------------------------------------------------------------------------------
+
+\begin{homeworkProblem}[Project description]
+As the title implies, the idea behind the project is to use the Vietoris-Rips complex for image classification. 
+\end{homeworkProblem}
+
+%----------------------------------------------------------------------------------------
 %	Obtaining and preprocessing data
 %----------------------------------------------------------------------------------------
 
@@ -212,7 +220,8 @@
 
 \begin{homeworkProblem}[The classification model]
 
-\begin{definition}\label{defa}[Vietoris-Rips complex]
+\begin{definition}[Vietoris-Rips complex]
+\label{defa}
 Let $X$ be a a set of $m$-dimensional points $X \in \mathbb{R}^{m}$ and let $d$ be a metric. Pick a parameter $r > 0$. Construct a simplicial complex as follows:
 \begin{itemize}
 	\item Add a $0$-simplex for each point in $X$.
@@ -221,7 +230,7 @@ Let $X$ be a a set of $m$-dimensional points $X \in \mathbb{R}^{m}$ and let $d$ 
 	\item ...
 	\item For $x_{1}, x_{2}, ... , x_{m} \in X$, add a $(m-1)$-simplex with vertices $x_{1}, x_{2}, ..., x_{m}$ if $d(x_{i}, x_{j}) \leq r$ for $0 \leq i,j \leq m$; that is, if all the points are within a distance of $r$ from each other.
 \end{itemize}
-The simplicial complex is called the Vietoris-Rips complex and is denoted $V_{r}(X)$.
+The simplicial complex is called the Vietoris-Rips complex and is denoted $VR_{r}(X)$.
 \end{definition}
 
 \lipsum[2]
@@ -231,7 +240,11 @@ The simplicial complex is called the Vietoris-Rips complex and is denoted $V_{r}
 Our intuition tells us, that the model we build using the Vietoris-Rips complex to classify the images, produces the same results as the well known single linkage clustering algorithm. In this section we aim to prove or at least give a strong intuition that this is indeed the case.
 
 \begin{definition}
-A connected component in a graph $G(V,E)$ ($V$ is a set of vertices, $E$ a set of edges) is a set of vertices $C$ such that between every two points $a, b \in C$ there exists a path in the graph $G$ between them.
+We say that disjoint subsets $A_{1}...A_{k}$ of vertices $V$ in graph $G(V,E)$ are $k$ connected components of the graph $G$ if the following is true:
+\begin{enumerate}
+	\item The vertices inside $A_{i}$ are connected i.e. there exists a path between arbitrary two vertices $a, b \in A_{i}$, for every $i \in 1...k$.
+	\item The sets of vertices $A_{1},...,A_{k}$ are disconnected i.e. there isn't an edges $e(a, b)$ between a pair of two points $(a,b)$ such that $a \in A_{i}, b \in A_{j}, i \neq j$.
+\end{enumerate}
 \end{definition}
 
 Both algorithms take a set $X$ of $n$ samples with $m$ features as input. We can think of a sample $x$ in the set $X$ as a point in the $m$-dimensional space $x \in \mathbb{R}^{m}$. The algortihms then constructs a graph with points $X$ as the vertices ($V$) and edges $E$. The $k$ connected components in the constructed graph corespond to the classes of samples.
@@ -256,22 +269,23 @@ The algorithm builds a ($1$-dimensional) Vietoris-Rips complex $V_{r}(X)$ with p
 To prove that the two algorithms indeed produce the same connected components we will first prove the next claim.
 
 \begin{claim}\label{claima}
-Let $G_{sl}(V_{sl}, E_{sl})$ be a graph produced by the single linkage algorithm for finding $k$ clusters and let $d_{max}$ denote the distance between vertices in graph $G_{sl}$ that were connected in the last iteration of the algorithm. Graph $G_{sl}$ has connected components $A_{1}...A_{k}$. The graph $G_{vr}(V_{vr}, E_{vr})$ induced by the Vietoris-Rips complex $V_{d_{max}}(V_{sl})$ has the same connected components $A_{1}...A_{k}$.
+Let $G_{sl}(V, E_{sl})$ be a graph produced by the single linkage algorithm for finding $k$ clusters and let $d_{max}$ denote the distance between vertices in graph $G_{sl}$ that were connected in the last iteration of the algorithm. Graph $G_{sl}$ has connected components $A_{1}...A_{k}$. The graph $G_{vr}(V, E_{vr})$ induced by the Vietoris-Rips complex $VR_{d_{max}}(V)$ has the same connected components $A_{1}...A_{k}$.
 \end{claim}
 
 \begin{proof}
-To prove that we have the exact same connected components in $G_{vr}$ as in $G_{sl}$ the following must be true for $G_{vr}$:
-\begin{enumerate}
-	\item The vertices inside $A_{i}$ are connected i.e. there exists a path between arbitrary two vertices $a, b \in A_{i}$, for every $i \in 1...k$.
-	\item The sets of vertices $A_{1},...,A_{k}$ are disconnected i.e. there isn't an edges $e(a, b)$ between a pair of two points $(a,b)$ such that $a \in A_{i}, b \in A_{j}, i \neq j$.
-\end{enumerate}
+We prove the Claim~\ref{claima} by induction on the steps in the single linkage algorithm. We start with a set of vertices $V$. Let $j$ denote the step (iteration) of the algorithm, $e_{j}$ the edge added in $j$-th step and $d_{j}$ its length. We claim that at each $j$ the graph $G_{sl}^{j}$ constructed by the algorithm up to that point, has the exact same conected components as $G_{vr}^{j}$, that is the graph induced by the Vietoris-Rips complex $VR_{d_{j}}(V)$.
 
-From the way the algorithm for single linkage works (it is adding edges of increasing length), we can easily see that $d_{max}$ is the largest edge in the graph $G_{sl}$. From this and the definition of Vietoris-Rips (Definition~\ref{defa}) it follows that the set of edges in $G_{sl}$ is a subset of edges in $G_{vr}$ i.e. $E_{sl} \subseteq E_{vr}$. This means that all the edges found in $G_{sl}$ will also appear in $G_{vr}$ therefore the vertices inside individual subsets $A_{i}$ will indeed be connected.\\
+\begin{paragraph}{Base case.}For $j=0$ this is obvious, since this is the initial state of the algorithm. Both graphs $G_{sl}^{0}$ and $G_{vr}^{0}$ consist only of vertices $V$. For $j=1$ the algorithm adds the smallest edge $e_{1}$ out of all possible candidates and builds a graph $G_{sl}^{1}$. Edge $e_{1}$ has length $d_{1}$. It is obvious that $VR_{d_{1}}(V)$ will induce a graph $G_{vr}^{1}$ that will also only contain edge $e_{1}$, since no other pairwise distance between vertices $V$ is smaller.
+\end{paragraph}
+
+\begin{paragraph}{Induction step.}
+Here we show that if for some $j$ our claim holds, it will also hold after another iteration of the algorithm i.e. for $j+1$. In $(j+1)$-th iteration, the algortihm finds the edge $e_{j+1}$ with length $d_{j+1}$ and adds it to the graph. By the definition of the algortihm $e_{j+1}$ is the smallest such edge that connects (joins) two seperate connected components. This means that every other edge $e'$ with length $d' < d_{j+1}$ would not join connected components, but would instead just connect some vertices, that are both allready in the same connected component. From the definition of the Vietoris-Rips complex we can see that in the graph $G_{vr}^{j+1}$ there will only be one new edge that will join two seperate connected components, and that will be exactly edge $e_{j+1}$. All the other extra edges that will be added in $G_{vr}^{j+1}$, but do not appear in  $G_{sl}^{j+1}$ will only connect vertices in the allready existing connected components of the graph $G_{vr}^{j}$. Since by our induction hypothesis graphs $G_{sl}^{j}$ and $G_{vr}^{j}$ had the same connected components and we joined two of the same connected components in both graphs this means that the graphs $G_{sl}^{j+1}$ and $G_{vr}^{j+1}$ also have the same connected components.
+\end{paragraph}\\
 \\
-We prove the second part by contradiction. By definition of Vietoris-Rips complex $V_{d_{max}}(V_{sl})$, no edge $e \in E_{vr}$ will be greater than $d_{max}$. Let's now assume that there exists an edge $e$ with length $d_{e}$ between two vertices $a, b$ that are in separate subsets $a \in A_{i}$ and $b \in A_{j}$, $i \neq j$. Now we have two options. First one $d_{e} < d_{max}$. If this was the case than $d_{e}$ would necessarily have to connect two points from the same subset $A_{i}$. This follows from the fact that single linkage algorithm always connects two of the closest connected components so any edge with a length smaller than $d_{max}$ is an edge inside one of the subsets $A_{1}, ... A_{k}$. TODO: further explanation needed for the first case??? The second option is that $d_{e} > d_{max}$. This also immediately leads to a contradiction, this time with the Vietoris-Rips definition.
+We have proven that the graph $G_{sl}^{j}$ constructed in $j$-th iteration of the single linkage algorithm indeed contains the same connceted commponents as the graph $G_{vr}^{j}$ induced by $VR_{d_{j}}(V)$ for an arbitrary $j$. This also prooves Claim~\ref{claima}.
 \end{proof}
 
-Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G_{sl}$ are indeed the same. We need to take into account that the Vietrois-Rips algorithm takes the biggest such $r$ so that the graph has $k$ connected components, so $r > d_{max}$. But we can quickly see that the extra edges in the graph induced by $V_{r}(V_{sl})$ will not change the connected components. After all we allready have $k$ connected components in $G_{vr}$. To join two together would mean a violation of a fundemental rule of the algorithm.
+Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G_{sl}$ are indeed the same. We need to take into account that the Vietrois-Rips algorithm takes the biggest such $r$, so that the graph has $k$ connected components, so $r > d_{max}$. But we can quickly see that the extra edges in the graph induced by $V_{r}(V_{sl})$ will not change the connected components. After all we allready have $k$ connected components in $G_{vr}$. To join any two together would mean a violation of a fundemental rule of the algorithm.
 
 \end{homeworkSection}
 
