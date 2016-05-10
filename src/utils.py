@@ -1,8 +1,10 @@
+from numpy import ndarray
+
 def do_one_or_list(item, f):
     """ Apply F on either every element of ITEM, if ITEM is a list, or just
     on ITEM as a single element otherwise.
     """
-    if type(item) == list:
+    if type(item) == list or type(item) == ndarray:
         return map(f, item)
     return f(item)
 
