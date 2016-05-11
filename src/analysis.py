@@ -12,59 +12,63 @@ from connected_components import connected_components, n_connected_components
 def uniq(cx):
     return set(map(tuple, cx))
 
-def critical_edges(dataset, pca_n, skeleton=1):
+def critical_edges(skeleton=1):
     """ Return only the edges that connect distinct clusters. """
-    n_classes = len(dataset)
-    X, y = load_dataset(dataset)
-    pp = Preprocess(pca_n)
-    X_tr = pp.fit_transform(X)
+    global n_classes, X, y, pp, X_tr, X_inv
 
-    distances = PairwiseDistances(X_tr.tolist())
-    distances = ExplicitDistances(distances)
+    distances = ExplicitDistances(PairwiseDistances(X_tr.tolist()))
     n_samples = len(X_tr)
     indices = range(n_samples)
     old_cx = [[]]
     old_n_components = n_classes
-    critical_connections = []
+    edges = []
     for r in sorted(set(np.array(distances.distances).flatten())):
         cx = filter_simplices(vietoris_rips(X_tr.tolist(), skeleton, r), skeleton)
         if old_cx != [[]] and old_n_components != n_connected_components((indices, cx)):
-            critical_connections.append(list(uniq(cx) - uniq(old_cx))[0])
+            edges.append(list(uniq(cx) - uniq(old_cx))[0])
             # print n_connected_components((indices, cx))
             # print connected_components((indices, cx))
         old_n_components = n_connected_components((indices, cx))
         old_cx = cx
-    return critical_connections
+    return edges
 
 def largest_sx(cx):
     return max(cx, key=len)
 
-def all_sxs(dataset, pca_n, skeleton=1):
+def sx_mean(sx, size=(1296, 864)):
+    global n_classes, X, y, pp, X_tr, X_inv
+    return to_image(np.mean(X_inv[sx], axis=0), size)
+
+def all_sxs(skeleton=1):
     """ Return all VR sx-s generated with epsilon such that number of
     clusters = number of classes.
     """
-    n_classes = len(dataset)
-    X, y = load_dataset(dataset)
-    pp = Preprocess(pca_n)
-    X_tr = pp.fit_transform(X)
-
+    global n_classes, X, y, pp, X_tr, X_inv
     tc = TopologicalClustering(n_classes)
     tc.fit(X_tr,y)
     return vietoris_rips(X_tr.tolist(), len(X), tc.r2)
 
-def interpolate_edge(dataset, pca_n, edge, ts=0.5, size=(1296, 864)):
+def interpolate_edge(edge, ts=0.5, size=(1296, 864)):
     """ Return interpolated set of images from dataset with that lie on the edge. """
+    global n_classes, X, y, pp, X_tr, X_inv
+    return [to_image(interpolate(X_inv[edge[0]], X_inv[edge[1]], t / 100.0), size) for t in ts]
+
+
+
+def prepare_data(dataset, pca_n):
+    global n_classes, X, y, pp, X_tr, X_inv
     n_classes = len(dataset)
     X, y = load_dataset(dataset)
     pp = Preprocess(pca_n)
     X_tr = pp.fit_transform(X)
     X_inv = pp.inverse_transform(X_tr)
-    return [to_image(interpolate(X_inv[edge[0]], X_inv[edge[1]], t / 100.0), size) for t in ts]
 
 
+if __name__ == "__main__":
+    prepare_data(['../data/tea_bag', '../data/spoon', '../data/tea_cup'], 0.7)
 
-dataset = ['../data/apple', '../data/spoon', '../data/apple']
-print "edges:", critical_edges(dataset, 0.7)
-print "largest dim sx:", largest_sx(all_sxs(dataset, 0.7))
-ts = range(0, 100, 20) + [100]
-save_all_images(interpolate_edge(dataset, 0.7, critical_edges(dataset, 0.7)[-3], ts=ts), "test")
+    print "edges:", critical_edges()
+    print "largest dim sx:", largest_sx(all_sxs())
+    ts = range(0, 100, 20) + [100]
+    save_all_images(interpolate_edge(critical_edges()[-3], ts=ts), "test")
+    print "largest dim sx:", save_all_images([sx_mean(largest_sx(all_sxs()))], "test2")
