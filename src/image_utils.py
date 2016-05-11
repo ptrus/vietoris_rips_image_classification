@@ -28,13 +28,15 @@ def to_vector(images):
     """
     return do_one_or_list(images, lambda i: np.copy(np.asarray(i.getdata())))
 
-def to_image(vectors, size):
-    """ Reshape one-dimensional (grayscale) image VECTORS to SIZE and convert
-    them to python image objects.
+def to_image(vector, size):
+    """ Reshape one-dimensional (grayscale) image VECTOR to SIZE and convert
+    it to python image object.
     """
     size = (size[1], size[0])
-    resized = do_one_or_list(vectors, lambda v: v.reshape(size).astype(np.uint8))
-    return do_one_or_list(resized, lambda v: Image.fromarray(v))
+    print size
+    print len(vector)
+    resized = vector.reshape(size).astype(np.uint8)
+    return Image.fromarray(resized)
 
 if __name__ == "__main__":
     import sys
