@@ -51,6 +51,8 @@ def all_sxs(skeleton=1):
 def interpolate_edge(edge, ts=0.5, size=(1296, 864)):
     """ Return interpolated set of images from dataset with that lie on the edge. """
     global n_classes, X, y, pp, X_tr, X_inv
+    if type(ts) is not list:
+        ts = [ts]
     return [to_image(interpolate(X_inv[edge[0]], X_inv[edge[1]], t / 100.0), size) for t in ts]
 
 
@@ -70,5 +72,5 @@ if __name__ == "__main__":
     print "edges:", critical_edges()
     print "largest dim sx:", largest_sx(all_sxs())
     ts = range(0, 100, 20) + [100]
-    save_all_images(interpolate_edge(critical_edges()[-3], ts=ts), "test")
-    print "largest dim sx:", save_all_images([sx_mean(largest_sx(all_sxs()))], "test2")
+    save_all_images(interpolate_edge(critical_edges()[-3], ts=ts), "edge")
+    print "largest dim sx:", save_all_images([sx_mean(largest_sx(all_sxs()))], "sx")

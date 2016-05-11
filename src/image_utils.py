@@ -1,5 +1,5 @@
 import Image
-from os import listdir
+from os import listdir,makedirs,path
 from utils import do_one_or_list
 import numpy as np
 
@@ -10,6 +10,8 @@ def load_all_images(directory):
 
 def save_all_images(images, directory):
     """ Save all IMAGES to the DIRECTORY in png format. """
+    if not path.exists(directory):
+        makedirs(directory)
     for i in range(len(images)):
         images[i].save(directory + '/' + str(i) + '.png')
 
