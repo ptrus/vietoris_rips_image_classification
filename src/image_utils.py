@@ -35,8 +35,6 @@ def to_image(vector, size):
     it to python image object.
     """
     size = (size[1], size[0])
-    print size
-    print len(vector)
     resized = vector.reshape(size).astype(np.uint8)
     return Image.fromarray(resized)
 

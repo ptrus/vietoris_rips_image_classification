@@ -55,6 +55,9 @@ def interpolate_edge(edge, ts=0.5, size=(1296, 864)):
         ts = [ts]
     return [to_image(interpolate(X_inv[edge[0]], X_inv[edge[1]], t / 100.0), size) for t in ts]
 
+def get_processed_images(size=(1296, 864)):
+    global n_classes, X, y, pp, X_tr, X_inv
+    return [to_image(x, size) for x in X_inv]
 
 
 def prepare_data(dataset, pca_n):
@@ -69,6 +72,7 @@ def prepare_data(dataset, pca_n):
 if __name__ == "__main__":
     prepare_data(['../data/tea_bag', '../data/spoon', '../data/tea_cup'], 0.7)
 
+    save_all_images(get_processed_images(), "prc")
     print "edges:", critical_edges()
     print "largest dim sx:", largest_sx(all_sxs())
     ts = range(0, 100, 20) + [100]
