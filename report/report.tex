@@ -38,6 +38,9 @@
 \usepackage{amsfonts}
 \usepackage{amsthm,amsmath,amssymb}
 
+\usepackage{color}
+\newcommand{\todo}[1]{\textcolor{red}{TODO: #1}\PackageWarning{TODO:}{#1!}}
+
 % Margins
 \topmargin=-0.45in
 \evensidemargin=0in
@@ -166,7 +169,8 @@
 \title{
 \vspace{2in}
 \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
-\normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate}\\
+% \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate}\\
+\normalsize\vspace{0.1in}\small{\today}\\
 \vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}
 \vspace{3in}
 }
@@ -196,6 +200,8 @@
 
 \begin{homeworkProblem}[Project description]
 As the title implies, the idea behind the project is to use the Vietoris-Rips complex for image classification. 
+
+\todo{Finish it up}
 \end{homeworkProblem}
 
 %----------------------------------------------------------------------------------------
@@ -207,11 +213,12 @@ As the title implies, the idea behind the project is to use the Vietoris-Rips co
 \begin{homeworkProblem}[Obtaining and preprocessing data]
 %Listing \ref{homework_example} shows a Perl script.
 
-%\perlscript{homework_example}{Sample Perl Script With Highlighting}
-\lstinputlisting[language=Python, firstline=5, lastline=33]{../src/preprocess.py}
+\todo{Describe our dataset (and show them)}
 
+\todo{Describe the process of generating matrix $X$}
 
-\lipsum[1]
+\todo{Describe the preprocessing steps and the idea behind it}
+
 \end{homeworkProblem}
 
 %----------------------------------------------------------------------------------------
@@ -233,7 +240,9 @@ Let $X$ be a a set of $m$-dimensional points $X \in \mathbb{R}^{m}$ and let $d$ 
 The simplicial complex is called the Vietoris-Rips complex and is denoted $VR_{r}(X)$.
 \end{definition}
 
-\lipsum[2]
+\todo{Describe how VR cx is then used to classify images}
+
+\todo{Explain why we only care about simplices of dimension 1}
 
 \begin{homeworkSection}{Relation to single linkage clustering algorithm}
 
@@ -289,6 +298,13 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
 
 \end{homeworkSection}
 
+\begin{homeworkSection}{Computational complexity of both approaches}
+\todo{Description of (optimal) computational complexity of single-linkage clustering}
+
+\todo{Description of computational complexity of our VR classifier}
+
+\end{homeworkSection}
+
 
 %\begin{center}
 %\includegraphics[width=0.75\columnwidth]{example_figure} % Example image
@@ -297,14 +313,29 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
 
 \end{homeworkProblem}
 
+\begin{homeworkProblem}[Results]
+\todo{Explain we get same results as with S-L clustering, and with that the same problems as S-L clustering.}
+
+\todo{Present MDS graph of our dataset after applying preprocessing, and emphasize different classes/recognized clusters.}
+
+\todo{Explain that simplices of larger dimension are just about useless}
+
+\todo{Explain what datasets our solution actually works with (e.g. determining position of objects on image)}
+
+\todo{Extra tests: images from midpoints of edges, barycenters of simplices, \ldots}
+
+\end{homeworkProblem}
+
+\begin{homeworkProblem}[Summary]
+
+\todo{Brief summary}
+
+\todo{Further work (if there even is any), what we didn't explore.}
+\end{homeworkProblem}
 
 %----------------------------------------------------------------------------------------
 %	Testing
 %----------------------------------------------------------------------------------------
-
-\begin{homeworkProblem}[Testing]
-\lipsum[3]
-\end{homeworkProblem}
 
 %----------------------------------------------------------------------------------------
 
