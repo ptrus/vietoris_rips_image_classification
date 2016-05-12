@@ -1,5 +1,5 @@
 import Image
-from os import listdir
+from os import listdir,makedirs,path
 from utils import do_one_or_list
 import numpy as np
 
@@ -10,6 +10,8 @@ def load_all_images(directory):
 
 def save_all_images(images, directory):
     """ Save all IMAGES to the DIRECTORY in png format. """
+    if not path.exists(directory):
+        makedirs(directory)
     for i in range(len(images)):
         images[i].save(directory + '/' + str(i) + '.png')
 
@@ -28,13 +30,13 @@ def to_vector(images):
     """
     return do_one_or_list(images, lambda i: np.copy(np.asarray(i.getdata())))
 
-def to_image(vectors, size):
-    """ Reshape one-dimensional (grayscale) image VECTORS to SIZE and convert
-    them to python image objects.
+def to_image(vector, size):
+    """ Reshape one-dimensional (grayscale) image VECTOR to SIZE and convert
+    it to python image object.
     """
     size = (size[1], size[0])
-    resized = do_one_or_list(vectors, lambda v: v.reshape(size).astype(np.uint8))
-    return do_one_or_list(resized, lambda v: Image.fromarray(v))
+    resized = vector.reshape(size).astype(np.uint8)
+    return Image.fromarray(resized)
 
 if __name__ == "__main__":
     import sys
