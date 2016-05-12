@@ -10,11 +10,11 @@
 %
 % Note:
 % The \lipsum[#] commands throughout this template generate dummy text
-% to fill the template out. These commands should all be removed when 
+% to fill the template out. These commands should all be removed when
 % writing assignment content.
 %
 % This template uses a Perl script as an example snippet of code, most other
-% languages are also usable. Configure them in the "CODE INCLUSION 
+% languages are also usable. Configure them in the "CODE INCLUSION
 % CONFIGURATION" section.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -37,6 +37,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{amsfonts}
 \usepackage{amsthm,amsmath,amssymb}
+\usepackage{cite}
 
 \usepackage{color}
 \newcommand{\todo}[1]{\textcolor{red}{TODO: #1}\PackageWarning{TODO:}{#1!}}
@@ -76,7 +77,7 @@
         keywordstyle=[1]\color{Blue}\bf, % Perl functions bold and blue
         keywordstyle=[2]\color{Purple}, % Perl function arguments purple
         keywordstyle=[3]\color{Blue}\underbar, % Custom functions underlined and blue
-        identifierstyle=, % Nothing special about identifiers                                         
+        identifierstyle=, % Nothing special about identifiers
         commentstyle=\usefont{T1}{pcr}{m}{sl}\color{MyDarkGreen}\small, % Comments small dark green courier font
         stringstyle=\color{Purple}, % Strings are purple
         showstringspaces=false, % Don't put marks in string spaces
@@ -263,7 +264,7 @@ We say that disjoint subsets $A_{1}...A_{k}$ of vertices $V$ in graph $G(V,E)$ a
 Both algorithms take a set $X$ of $n$ samples with $m$ features as input. We can think of a sample $x$ in the set $X$ as a point in the $m$-dimensional space $x \in \mathbb{R}^{m}$. The algortihms then constructs a graph with points $X$ as the vertices ($V$) and edges $E$. The $k$ connected components in the constructed graph corespond to the classes of samples.
 
 \begin{paragraph}{Single linkage algorithm.}
-The algorithm starts with $n$ connected components (no edges in the graph). n each step the algorithm chooses the two connected components that are closest to each according to some distance metric $d$ (in our case the euclidean distance) and joins them into one by adding an edge between their closest two vertices. 
+The algorithm starts with $n$ connected components (no edges in the graph). n each step the algorithm chooses the two connected components that are closest to each according to some distance metric $d$ (in our case the euclidean distance) and joins them into one by adding an edge between their closest two vertices.
 
 \begin{definition}
 The distance $D$ between two connected components $A$ and $B$ is defined as the distance of the pair of vertices (one from $A$ and one from $B$) that are closest to each other. More formally
@@ -310,7 +311,7 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
 
   With this the final time complexity of our approach is $O((n^2 + n^2)\log n^2) = O(n^2 \log n)$ using $O(n^2)$ space. \todo{Double check the time complexity of union-find}
 
-  Contrast this with the computational complexity of single-linkage clustering, which with a clever implementation can in optimal case produce solution in $O(n^2)$ time and $O(n)$ space. \todo{Find reference from wikipedia}.
+  Contrast this with the computational complexity of single-linkage clustering, which with a clever implementation can in optimal case produce solution in $O(n^2)$ time and $O(n)$ space~\cite{gower1969minimum}.
 
 \end{homeworkSection}
 
@@ -342,21 +343,7 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
 \todo{Further work (if there even is any), what we didn't explore.}
 \end{homeworkProblem}
 
-%----------------------------------------------------------------------------------------
-%	Testing
-%----------------------------------------------------------------------------------------
-
-%----------------------------------------------------------------------------------------
-
-\begin{thebibliography}{9}
-
-\bibitem{lamport94}
-  Leslie Lamport,
-  \emph{\LaTeX: a document preparation system},
-  Addison Wesley, Massachusetts,
-  2nd edition,
-  1994.
-
-\end{thebibliography}
+\bibliography{./bib}{}
+\bibliographystyle{plain}
 
 \end{document}
