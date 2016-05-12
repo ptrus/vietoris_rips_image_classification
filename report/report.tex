@@ -298,10 +298,15 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
 
 \end{homeworkSection}
 
-\begin{homeworkSection}{Computational complexity of both approaches}
-\todo{Description of (optimal) computational complexity of single-linkage clustering}
+\begin{homeworkSection}{Computational complexity}
 
-\todo{Description of computational complexity of our VR classifier}
+  Let us now consider the computational complexity of our model. Since we are only interested in Vietoris-Rips complexes $VR_r$ with simplices of dimension $1$, the simplest approach to construct such complex requires us to check the distance between every pair of vertices $(x_1, x_2) \in X \times X$, adding such pair to the final complex if the distance $d(x_1, x_2) \le r$. In worst case the algorithm would have to return all distinct pairs of vertices, meaning construction of $VR_r(X)$ requires $O(n^2)$ time and consumes $O(n^2)$ space, where $n$ is the number of vertices in $X$.
+
+  The problem is that we don't know the appropriate value for the parameter $r$. Recall that we are interested in finding biggest $r$, such that the Vietoris-Rips complex $VR_{r}$ has as many connected components as there are distinct classes of images. Let $r_{max}$ denote the largest distance between two vertices from $X$. Note that $r$ we are looking for will always be bounded on the interval $[0, r_{max}]$, and it will furthermore be exactly one of the distances between some pair of vertices. Thus we only have $n^2$ different possible values of $r$ to check, and if we sort them by size and use binary search to find the right one, we can do it in $O(n \log n)$ time and $O(n^2)$ space. To count the number of connected components obtained with each of different $VR$ complexes, we can use a \texttt{union-find} algorithm, which roughly adds a $O(n^2)$ time to each run.
+
+  With this the final time complexity of our approach is $O((n^2 + n^2)\log n^2) = O(n^2 \log n)$ using $O(n^2)$ space. \todo{Double check the time complexity of union-find}
+
+  Contrast this with the computational complexity of single-linkage clustering, which with a clever implementation can in optimal case produce solution in $O(n^2)$ time and $O(n)$ space. \todo{Find reference from wikipedia}.
 
 \end{homeworkSection}
 
