@@ -79,8 +79,10 @@ class Preprocess(BaseEstimator, TransformerMixin):
         """
         return self.pca.fit_transform(self.scaler.fit_transform(x))
 
-    def inverse_transform(self, x):
-        """ First undo the PCA transformation, than undo the scaling """
+    def inverse_transform(self, x, only_pca=False):
+        """ First undo the PCA transformation, then undo the scaling unless only_pca """
+        if only_pca:
+            return self.pca.inverse_transform(x)
         return self.scaler.inverse_transform(self.pca.inverse_transform(x))
 
 

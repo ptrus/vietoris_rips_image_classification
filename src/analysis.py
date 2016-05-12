@@ -12,6 +12,12 @@ from connected_components import connected_components, n_connected_components
 def uniq(cx):
     return set(map(tuple, cx))
 
+def invert(Xs):
+    global n_classes, X, y, pp, X_tr, X_inv
+    Xs_inv = pp.inverse_transform(Xs, only_pca=True)
+    return (Xs_inv + 1) / 2.0 * 255
+
+
 def critical_edges(skeleton=1):
     """ Return only the edges that connect distinct clusters. """
     global n_classes, X, y, pp, X_tr, X_inv
@@ -55,6 +61,10 @@ def vertex_in_cx(v, cx):
             return True
     return False
 
+def sx_mean2(sx, size=(1080, 810)):
+    global n_classes, X, y, pp, X_tr, X_inv
+    return to_image(invert(np.array([np.mean(X_tr[sx], axis=0)]))[0], size)
+
 def sx_mean(sx, size=(1080, 810)):
     global n_classes, X, y, pp, X_tr, X_inv
     return to_image(np.mean(X_inv[sx], axis=0), size)
@@ -73,7 +83,7 @@ def interpolate_edge(edge, ts=0.5, size=(1080, 810)):
     global n_classes, X, y, pp, X_tr, X_inv
     if type(ts) is not list:
         ts = [ts]
-    return [to_image(interpolate(X_inv[edge[0]], X_inv[edge[1]], t / 100.0), size) for t in ts]
+    return [to_image(invert(interpolate(X_tr[edge[0]], X_tr[edge[1]], t / 100.0)), size) for t in ts]
 
 def get_processed_images(size=(1080, 810)):
     global n_classes, X, y, pp, X_tr, X_inv
@@ -95,6 +105,6 @@ if __name__ == "__main__":
     print "edges:", critical_edges()
     print "largest dim sx:", largest_sx(all_sxs())
     ts = range(0, 100, 20) + [100]
-    save_all_images(interpolate_edge(critical_edges()[-3], ts=ts), "edge")
-    print "largest dim sx:", save_all_images([sx_mean(largest_sx(all_sxs()))], "sx")
-    print "princpals:", save_all_images([sx_mean(sx) for sx in principal_sxs(all_sxs())], "princ")
+    save_all_images(interpolate_edge(critical_edges()[-2], ts=ts), "edge1")
+    save_all_images(interpolate_edge(critical_edges()[-1], ts=ts), "edge2")
+    print "princpals:", save_all_images([sx_mean2(sx) for sx in principal_sxs(all_sxs())], "princ")
