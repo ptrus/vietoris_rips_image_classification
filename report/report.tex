@@ -199,7 +199,7 @@
 %----------------------------------------------------------------------------------------
 
 \begin{homeworkProblem}[Project description]
-As the title implies, the idea behind the project is to use the Vietoris-Rips complex for image classification. We took pictures of three generic objects and preprocessed them so we obtained vector representations of pictures. The vector representations of images can then be looked upon as points in some $n$-dimensional space $\mathbb{R}^{n}$. Over this points we build the Vietoris-Rips complex for two different parameters. We use the complexes to build a classification model for the images and classify them. We also perform several interesting tests on the generated Vietoris-Rips complex.
+As the title implies, the idea behind the project is to use the Vietoris-Rips (in future abreviated VR-cx) complex for image classification. We took pictures of three generic objects and preprocessed them so we obtained vector representations of pictures. The vector representations of images can then be looked upon as points in some $n$-dimensional space $\mathbb{R}^{n}$. Over this points we build the VR-cx for two different parameters. We use the complexes to build a classification model for the images and classify them. We also perform several interesting tests on the generated VR-cx.
 
 \end{homeworkProblem}
 
@@ -228,7 +228,7 @@ As the title implies, the idea behind the project is to use the Vietoris-Rips co
 
 \begin{definition}[Vietoris-Rips complex]
 \label{defa}
-Let $X$ be a a set of $m$-dimensional points $X \in \mathbb{R}^{m}$ and let $d$ be a metric. Pick a parameter $r > 0$. Construct a simplicial complex as follows:
+Let $X$ be a set of $m$-dimensional points $X \in \mathbb{R}^{m}$ and let $d$ be a metric. Pick a parameter $r > 0$. Construct a simplicial complex as follows:
 \begin{itemize}
 	\item Add a $0$-simplex for each point in $X$.
 	\item For $x_{1}, x_{2} \in X$ add a $1$-simplex between $x_{1}, x_{2}$ if $d(x_{1}, x_{2}) \leq r$.
@@ -239,14 +239,6 @@ Let $X$ be a a set of $m$-dimensional points $X \in \mathbb{R}^{m}$ and let $d$ 
 The simplicial complex is called the Vietoris-Rips complex and is denoted $VR_{r}(X)$.
 \end{definition}
 
-\todo{Describe how VR cx is then used to classify images}
-
-\todo{Explain why we only care about simplices of dimension 1}
-
-\begin{homeworkSection}{Relation to single linkage clustering algorithm}
-
-Our intuition tells us, that the model we build using the Vietoris-Rips complex to classify the images, produces the same results as the well known single linkage clustering algorithm. In this section we aim to prove or at least give a strong intuition that this is indeed the case.
-
 \begin{definition}
 We say that disjoint subsets $A_{1}...A_{k}$ of vertices $V$ in graph $G(V,E)$ are $k$ connected components of the graph $G$ if the following is true:
 \begin{enumerate}
@@ -254,6 +246,14 @@ We say that disjoint subsets $A_{1}...A_{k}$ of vertices $V$ in graph $G(V,E)$ a
 	\item The sets of vertices $A_{1},...,A_{k}$ are disconnected i.e. there isn't an edges $e(a, b)$ between a pair of two points $(a,b)$ such that $a \in A_{i}, b \in A_{j}, i \neq j$.
 \end{enumerate}
 \end{definition}
+
+Given the input of $n$ $m$-dimensional points $X \in \mathbb{R}^{m}$ and a metric $d$ (in our case the eulidian distance) we build a VR-cx for parameter $r = r_{2}$, where $r_{2}$ is the biggest $r$ such that the VR-cx has three connected components. We find the parameter $r_{2}$ using a binary search on a set of all possible values of $r$. We then perform the classification, simply by saying that all the objects in some connected component belong to the same class. Seeing as we have three connected components in our VR-cx we will get three distinct classes.\\
+
+It does not take much thought to see, that our classification model will produce the exact same results if we  only use simplices of dimension $1$, as it would, if we use all the simplices up to dimension $h$, where $h$ is an arbitrary number in the range $h \in 1...m$. This follows from Definition~\ref{defa}.
+
+\begin{homeworkSection}{Relation to single linkage clustering algorithm}
+
+Our intuition tells us, that the model we build using the VR-cx to classify the images, produces the same results as the well known single linkage clustering algorithm. In this section we aim to prove or at least give a strong intuition that this is indeed the case.
 
 Both algorithms take a set $X$ of $n$ samples with $m$ features as input. We can think of a sample $x$ in the set $X$ as a point in the $m$-dimensional space $x \in \mathbb{R}^{m}$. The algortihms then constructs a graph with points $X$ as the vertices ($V$) and edges $E$. The $k$ connected components in the constructed graph corespond to the classes of samples.
 
