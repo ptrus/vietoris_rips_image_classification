@@ -67,7 +67,6 @@ class TopologicalClustering(BaseEstimator, TransformerMixin):
 
 
 if __name__ == '__main__':
-    n_clusters = 3
     # from sklearn.datasets import load_iris
     # X = load_iris()['data']
     # y = load_iris()['target']
@@ -77,15 +76,17 @@ if __name__ == '__main__':
 # Load data
     from sklearn.cross_validation import train_test_split
     from dataset import load_dataset
-    X,y = load_dataset(['../data/tea_cup', '../data/spoon', '../data/apple'])
+    datasets = ['../data/tea_cup', '../data/spoon', '../data/apple']
+    X,y = load_dataset(datasets)
     X, _, y, _ = train_test_split(X, y, test_size=0.75)
     print "True classes:             ", y
 
 # Preprocess data
-    p = Preprocess(0.7)
+    p = Preprocess(0.75)
     X = p.fit_transform(X)
 
 # Apply topological clustering
+    n_clusters = len(datasets)
     tc = TopologicalClustering(n_clusters)
     tc.fit(X,y)
     topo_pred = tc.predict(X)
