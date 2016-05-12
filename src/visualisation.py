@@ -25,10 +25,11 @@ def lines_plot(lines, cords, color='r'):
 
 if __name__ == '__main__':
     from dataset import load_dataset
-    from preprocess import Preprocess
+    from preprocess import Preprocess, NoScaler
+    from sklearn.preprocessing import StandardScaler
 
-    X,Y = load_dataset(['../train_set/tea_cup', '../train_set/tea_bag'])
-    p = Preprocess(0.7)
+    X,Y = load_dataset(['../data/tea_cup', '../data/tea_bag', '../data/spoon'])
+    p = Preprocess(0.75, NoScaler())
     X = p.fit_transform(X)
     cords = mds_plot(X, Y)
     lines = [[1,2],[2,3],[3,1]]

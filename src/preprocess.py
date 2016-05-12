@@ -2,6 +2,22 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.decomposition import PCA
 import numpy as np
 
+class NoScaler(BaseEstimator, TransformerMixin):
+    def __init__(self):
+        pass
+
+    def fit(self, x):
+        return x
+
+    def transform(self, x):
+        return x
+
+    def fit_transform(self, x):
+        return x
+
+    def inverse_transform(self, x):
+        return x
+
 class Scaler(BaseEstimator, TransformerMixin):
     """ Class used for scaling the dataset x.
         Removes the mean and than scales to values from [-1, 1].
@@ -46,9 +62,9 @@ class Preprocess(BaseEstimator, TransformerMixin):
         the variance explained printed.
     """
 
-    def __init__(self, pca_n=None, axis=1):
+    def __init__(self, pca_n=None, scaler=Scaler(axis=1)):
         self.pca = PCA(pca_n)
-        self.scaler = Scaler(axis)
+        self.scaler = scaler
 
     def fit(self, x):
         self.pca.fit(self.scaler.fit_transform(x))
