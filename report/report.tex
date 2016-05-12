@@ -200,9 +200,7 @@
 %----------------------------------------------------------------------------------------
 
 \begin{homeworkProblem}[Project description]
-As the title implies, the idea behind the project is to use the Vietoris-Rips complex for image classification. 
-
-\todo{What is the end goal}
+As the title implies, the idea behind the project is to use the Vietoris-Rips (in future abreviated VR-cx) complex for image classification. We took pictures of three generic objects and preprocessed them so we obtained vector representations of pictures. The vector representations of images can then be looked upon as points in some $n$-dimensional space $\mathbb{R}^{n}$. Over this points we build the VR-cx for two different parameters. We use the complexes to build a classification model for the images and classify them. We also perform several interesting tests on the generated VR-cx.
 \end{homeworkProblem}
 
 %----------------------------------------------------------------------------------------
@@ -231,7 +229,7 @@ With this we are left with a very large matrix, and in order to reduce processin
 
 \begin{definition}[Vietoris-Rips complex]
 \label{defa}
-Let $X$ be a a set of $m$-dimensional points $X \in \mathbb{R}^{m}$ and let $d$ be a metric. Pick a parameter $r > 0$. Construct a simplicial complex as follows:
+Let $X$ be a set of $m$-dimensional points $X \in \mathbb{R}^{m}$ and let $d$ be a metric. Pick a parameter $r > 0$. Construct a simplicial complex as follows:
 \begin{itemize}
 	\item Add a $0$-simplex for each point in $X$.
 	\item For $x_{1}, x_{2} \in X$ add a $1$-simplex between $x_{1}, x_{2}$ if $d(x_{1}, x_{2}) \leq r$.
@@ -242,14 +240,6 @@ Let $X$ be a a set of $m$-dimensional points $X \in \mathbb{R}^{m}$ and let $d$ 
 The simplicial complex is called the Vietoris-Rips complex and is denoted $VR_{r}(X)$.
 \end{definition}
 
-\todo{Describe how VR cx is then used to classify images}
-
-\todo{Explain why we only care about simplices of dimension 1}
-
-\begin{homeworkSection}{Relation to single linkage clustering algorithm}
-
-Our intuition tells us, that the model we build using the Vietoris-Rips complex to classify the images, produces the same results as the well known single linkage clustering algorithm. In this section we aim to prove or at least give a strong intuition that this is indeed the case.
-
 \begin{definition}
 We say that disjoint subsets $A_{1}...A_{k}$ of vertices $V$ in graph $G(V,E)$ are $k$ connected components of the graph $G$ if the following is true:
 \begin{enumerate}
@@ -257,6 +247,14 @@ We say that disjoint subsets $A_{1}...A_{k}$ of vertices $V$ in graph $G(V,E)$ a
 	\item The sets of vertices $A_{1},...,A_{k}$ are disconnected i.e. there isn't an edges $e(a, b)$ between a pair of two points $(a,b)$ such that $a \in A_{i}, b \in A_{j}, i \neq j$.
 \end{enumerate}
 \end{definition}
+
+Given the input of $n$ $m$-dimensional points $X \in \mathbb{R}^{m}$ and a metric $d$ (in our case the eulidian distance) we build a VR-cx for parameter $r = r_{2}$, where $r_{2}$ is the biggest $r$ such that the VR-cx has three connected components. We find the parameter $r_{2}$ using a binary search on a set of all possible values of $r$. We then perform the classification, simply by saying that all the objects in some connected component belong to the same class. Seeing as we have three connected components in our VR-cx we will get three distinct classes.\\
+
+It does not take much thought to see, that our classification model will produce the exact same results if we  only use simplices of dimension $1$, as it would, if we use all the simplices up to dimension $h$, where $h$ is an arbitrary number in the range $h \in 1...m$. This follows from Definition~\ref{defa}.
+
+\begin{homeworkSection}{Relation to single linkage clustering algorithm}
+
+Our intuition tells us, that the model we build using the VR-cx to classify the images, produces the same results as the well known single linkage clustering algorithm. In this section we aim to prove or at least give a strong intuition that this is indeed the case.
 
 Both algorithms take a set $X$ of $n$ samples with $m$ features as input. We can think of a sample $x$ in the set $X$ as a point in the $m$-dimensional space $x \in \mathbb{R}^{m}$. The algortihms then constructs a graph with points $X$ as the vertices ($V$) and edges $E$. The $k$ connected components in the constructed graph corespond to the classes of samples.
 
@@ -290,10 +288,10 @@ We prove the Claim~\ref{claima} by induction on the steps in the single linkage 
 \end{paragraph}
 
 \begin{paragraph}{Induction step.}
-Here we show that if for some $j$ our claim holds, it will also hold after another iteration of the algorithm i.e. for $j+1$. In $(j+1)$-th iteration, the algortihm finds the edge $e_{j+1}$ with length $d_{j+1}$ and adds it to the graph. By the definition of the algortihm $e_{j+1}$ is the smallest such edge that connects (joins) two seperate connected components. This means that every other edge $e'$ with length $d' < d_{j+1}$ would not join connected components, but would instead just connect some vertices, that are both allready in the same connected component. From the definition of the Vietoris-Rips complex we can see that in the graph $G_{vr}^{j+1}$ there will only be one new edge that will join two seperate connected components, and that will be exactly edge $e_{j+1}$. All the other extra edges that will be added in $G_{vr}^{j+1}$, but do not appear in  $G_{sl}^{j+1}$ will only connect vertices in the allready existing connected components of the graph $G_{vr}^{j}$. Since by our induction hypothesis graphs $G_{sl}^{j}$ and $G_{vr}^{j}$ had the same connected components and we joined two of the same connected components in both graphs this means that the graphs $G_{sl}^{j+1}$ and $G_{vr}^{j+1}$ also have the same connected components.
+Here we show that if for some $j$ our claim holds, it will also hold after another iteration of the algorithm i.e. for $j+1$. In $(j+1)$-th iteration, the algortihm finds the edge $e_{j+1}$ with length $d_{j+1}$ and adds it to the graph. By the definition of the algortihm $e_{j+1}$ is the smallest such edge that connects (joins) two seperate connected components. This means that every other edge $e'$ with length $d' < d_{j+1}$ would not join connected components, but would instead just connect two vertices, that are both allready in the same connected component. From the definition of the Vietoris-Rips complex we can see that in the graph $G_{vr}^{j+1}$ there will only be one new edge that will join two seperate connected components, and that will be exactly edge $e_{j+1}$. All the other extra edges that will be added in $G_{vr}^{j+1}$, but do not appear in  $G_{sl}^{j+1}$ have length less than $d_{j+1}$ and will therefore only connect vertices inside of allready existing connected components of the graph $G_{vr}^{j}$. Since by our induction hypothesis graphs $G_{sl}^{j}$ and $G_{vr}^{j}$ had the same connected components and we joined two of the same connected components in both graphs, this means that the graphs $G_{sl}^{j+1}$ and $G_{vr}^{j+1}$ also have the same connected components.
 \end{paragraph}\\
 \\
-We have proven that the graph $G_{sl}^{j}$ constructed in $j$-th iteration of the single linkage algorithm indeed contains the same connceted commponents as the graph $G_{vr}^{j}$ induced by $VR_{d_{j}}(V)$ for an arbitrary $j$. This also prooves Claim~\ref{claima}.
+We have proven that the graph $G_{sl}^{j}$ constructed in $j$-th iteration of the single linkage algorithm indeed contains the same connected commponents as the graph $G_{vr}^{j}$ induced by $VR_{d_{j}}(V)$ for an arbitrary $j$. This also prooves Claim~\ref{claima}.
 \end{proof}
 
 Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G_{sl}$ are indeed the same. We need to take into account that the Vietrois-Rips algorithm takes the biggest such $r$, so that the graph has $k$ connected components, so $r > d_{max}$. But we can quickly see that the extra edges in the graph induced by $V_{r}(V_{sl})$ will not change the connected components. After all we allready have $k$ connected components in $G_{vr}$. To join any two together would mean a violation of a fundemental rule of the algorithm.
