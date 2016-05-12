@@ -7,6 +7,7 @@ import numpy as np
 from vietoris_rips import vietoris_rips
 from topological_clustering import TopologicalClustering,filter_simplices
 from connected_components import connected_components, n_connected_components
+from visualisation import *
 
 
 def uniq(cx):
@@ -90,11 +91,45 @@ def prepare_data(dataset, pca_n):
 
 
 if __name__ == "__main__":
+##    prepare_data(['../data/cup', '../data/paper', '../data/pen'], 0.7)
+##    save_all_images(get_processed_images(), "prc")
+##    print "edges:", critical_edges()
+##    print "largest dim sx:", largest_sx(all_sxs())
+##    ts = range(0, 100, 20) + [100]
+##    save_all_images(interpolate_edge(critical_edges()[-3], ts=ts), "edge")
+##    print "largest dim sx:", save_all_images([sx_mean(largest_sx(all_sxs()))], "sx")
+##    print "princpals:", save_all_images([sx_mean(sx) for sx in principal_sxs(all_sxs())], "princ")
+
+# Plot results of single linkage and topological clustering using visualize
     prepare_data(['../data/cup', '../data/paper', '../data/pen'], 0.7)
-    save_all_images(get_processed_images(), "prc")
-    print "edges:", critical_edges()
-    print "largest dim sx:", largest_sx(all_sxs())
-    ts = range(0, 100, 20) + [100]
-    save_all_images(interpolate_edge(critical_edges()[-3], ts=ts), "edge")
-    print "largest dim sx:", save_all_images([sx_mean(largest_sx(all_sxs()))], "sx")
-    print "princpals:", save_all_images([sx_mean(sx) for sx in principal_sxs(all_sxs())], "princ")
+
+    #edges
+##    print "edges in SL:", critical_edges()
+##    print "edges in TC:", filter_simplices(all_sxs(), 1)
+
+    #predictions
+    tc = TopologicalClustering(n_classes)
+    tc.fit(X_tr,y)
+    topo_pred = tc.predict(X_tr)
+    print "Topological clustering:   ", topo_pred
+
+    import scipy.spatial.distance as ssd
+    from scipy.cluster.hierarchy import linkage, fcluster
+    distances = PairwiseDistances(X_tr.tolist())
+    distances = ExplicitDistances(distances)
+    singlel_pred = fcluster(linkage(ssd.squareform(distances.distances)), n_classes, criterion='maxclust')
+    print "Single-linkage clustering:", singlel_pred
+
+    #visualize
+    cords = mds_transform(X_tr) #transform points
+##    cords_tc = mds_plot(X_tr, topo_pred)
+    lines_sl = critical_edges()[:-2] #lines from sl algo
+    lines_tc = filter_simplices(all_sxs(), 1) #lines from tc algo
+    plot_points(cords, topo_pred) #plot points
+    lines_plot(lines_sl, cords, color = "grey")
+    plt.show()
+    plot_points(cords, topo_pred) #plot points
+    lines_plot(lines_tc, cords, color = "grey")
+    plt.show()
+    
+
