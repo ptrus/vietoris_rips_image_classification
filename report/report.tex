@@ -10,11 +10,11 @@
 %
 % Note:
 % The \lipsum[#] commands throughout this template generate dummy text
-% to fill the template out. These commands should all be removed when 
+% to fill the template out. These commands should all be removed when
 % writing assignment content.
 %
 % This template uses a Perl script as an example snippet of code, most other
-% languages are also usable. Configure them in the "CODE INCLUSION 
+% languages are also usable. Configure them in the "CODE INCLUSION
 % CONFIGURATION" section.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -30,6 +30,8 @@
 \usepackage{extramarks} % Required for headers and footers
 \usepackage[usenames,dvipsnames]{color} % Required for custom colors
 \usepackage{graphicx} % Required to insert images
+\usepackage{caption}
+\usepackage{subcaption}
 \usepackage{listings} % Required for insertion of code
 \usepackage{courier} % Required for the courier font
 \usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
@@ -37,6 +39,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{amsfonts}
 \usepackage{amsthm,amsmath,amssymb}
+\usepackage{cite}
 
 \usepackage{color}
 \newcommand{\todo}[1]{\textcolor{red}{TODO: #1}\PackageWarning{TODO:}{#1!}}
@@ -76,7 +79,7 @@
         keywordstyle=[1]\color{Blue}\bf, % Perl functions bold and blue
         keywordstyle=[2]\color{Purple}, % Perl function arguments purple
         keywordstyle=[3]\color{Blue}\underbar, % Custom functions underlined and blue
-        identifierstyle=, % Nothing special about identifiers                                         
+        identifierstyle=, % Nothing special about identifiers
         commentstyle=\usefont{T1}{pcr}{m}{sl}\color{MyDarkGreen}\small, % Comments small dark green courier font
         stringstyle=\color{Purple}, % Strings are purple
         showstringspaces=false, % Don't put marks in string spaces
@@ -200,7 +203,6 @@
 
 \begin{homeworkProblem}[Project description]
 As the title implies, the idea behind the project is to use the Vietoris-Rips (in future abreviated VR-cx) complex for image classification. We took pictures of three generic objects and preprocessed them so we obtained vector representations of pictures. The vector representations of images can then be looked upon as points in some $n$-dimensional space $\mathbb{R}^{n}$. Over this points we build the VR-cx for two different parameters. We use the complexes to build a classification model for the images and classify them. We also perform several interesting tests on the generated VR-cx.
-
 \end{homeworkProblem}
 
 %----------------------------------------------------------------------------------------
@@ -212,12 +214,13 @@ As the title implies, the idea behind the project is to use the Vietoris-Rips (i
 \begin{homeworkProblem}[Obtaining and preprocessing data]
 %Listing \ref{homework_example} shows a Perl script.
 
-\todo{Describe our dataset (and show them)}
+\todo{Show the images}
 
-\todo{Describe the process of generating matrix $X$}
+For our dataset we used grayscale photographs of 3 different objects: a paper cup, crumpled up paper and a pen. Each of the objects was photographed 10 times from slightly different angles and under different illumination. The sizes of the images were $1080$ pixels in width and $810$ pixels in height.
 
-\todo{Describe the preprocessing steps and the idea behind it}
+  We can think of images as matrices of size $(n \times m)$ where each entry represents the intensity of the corresponding pixel (meaning in our case we had $30$ matrices of size $1080 \times 810$). With images in grayscale color space, each of the values has an integer value between $0$ (black) and $255$ (white). In order to then prepare the dataset for evaluation with our classification model, we flattened each matrix into one long vector of size $n m$ (first row of the matrix being first $n$ elements, second row the next $n$ and so on $m$ times). We then stacked all individual vectors vertically to form a large matrix with $30$ rows, one for each individual image, and $n m$ columns, one for each individual pixel.
 
+With this we are left with a very large matrix, and in order to reduce processing time and decrease amount of noise, we apply principal component analysis, reducing number of columns from $n \times m$ to just a few
 \end{homeworkProblem}
 
 %----------------------------------------------------------------------------------------
@@ -258,7 +261,7 @@ Our intuition tells us, that the model we build using the VR-cx to classify the 
 Both algorithms take a set $X$ of $n$ samples with $m$ features as input. We can think of a sample $x$ in the set $X$ as a point in the $m$-dimensional space $x \in \mathbb{R}^{m}$. The algortihms then constructs a graph with points $X$ as the vertices ($V$) and edges $E$. The $k$ connected components in the constructed graph corespond to the classes of samples.
 
 \begin{paragraph}{Single linkage algorithm.}
-The algorithm starts with $n$ connected components (no edges in the graph). n each step the algorithm chooses the two connected components that are closest to each according to some distance metric $d$ (in our case the euclidean distance) and joins them into one by adding an edge between their closest two vertices. 
+The algorithm starts with $n$ connected components (no edges in the graph). n each step the algorithm chooses the two connected components that are closest to each according to some distance metric $d$ (in our case the euclidean distance) and joins them into one by adding an edge between their closest two vertices.
 
 \begin{definition}
 The distance $D$ between two connected components $A$ and $B$ is defined as the distance of the pair of vertices (one from $A$ and one from $B$) that are closest to each other. More formally
@@ -305,7 +308,7 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
 
   With this the final time complexity of our approach is $O((n^2 + n^2)\log n^2) = O(n^2 \log n)$ using $O(n^2)$ space. \todo{Double check the time complexity of union-find}
 
-  Contrast this with the computational complexity of single-linkage clustering, which with a clever implementation can in optimal case produce solution in $O(n^2)$ time and $O(n)$ space. \todo{Find reference from wikipedia}.
+  Contrast this with the computational complexity of single-linkage clustering, which with a clever implementation can in optimal case produce solution in $O(n^2)$ time and $O(n)$ space~\cite{gower1969minimum}.
 
 \end{homeworkSection}
 
@@ -321,6 +324,24 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
 \todo{Explain we get same results as with S-L clustering, and with that the same problems as S-L clustering.}
 
 \todo{Present MDS graph of our dataset after applying preprocessing, and emphasize different classes/recognized clusters.}
+\begin{paragraph}{Preprocessing results.}
+
+\begin{figure}[t!]
+    \centering
+    \begin{subfigure}[t]{0.4\textwidth}
+        \centering
+        \includegraphics[height=3.5cm]{img/mds_no_preprocessing}
+    \end{subfigure}
+   ~
+    \begin{subfigure}[t]{0.4\textwidth}
+        \centering
+        \includegraphics[height=3.5cm]{img/mds_preprocessing}
+        \end{subfigure}
+  \caption{Caption place holder}
+\end{figure}
+
+
+\end{paragraph}
 
 \todo{Explain that simplices of larger dimension are just about useless}
 
@@ -337,21 +358,7 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
 \todo{Further work (if there even is any), what we didn't explore.}
 \end{homeworkProblem}
 
-%----------------------------------------------------------------------------------------
-%	Testing
-%----------------------------------------------------------------------------------------
-
-%----------------------------------------------------------------------------------------
-
-\begin{thebibliography}{9}
-
-\bibitem{lamport94}
-  Leslie Lamport,
-  \emph{\LaTeX: a document preparation system},
-  Addison Wesley, Massachusetts,
-  2nd edition,
-  1994.
-
-\end{thebibliography}
+\bibliography{./bib}{}
+\bibliographystyle{plain}
 
 \end{document}
