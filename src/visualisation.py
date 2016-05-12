@@ -2,13 +2,38 @@ from sklearn import manifold
 from matplotlib import pyplot as plt
 import numpy as np
 
+<<<<<<< HEAD
+def mds_transform(points):
+    mds = manifold.MDS()
+    coords = mds.fit_transform(points)
+    return coords
+    
+def plot_points(coords, target):
+    if target == []:
+        target = np.zeros(len(points)).tolist()
+
+    fig = plt.figure()
+    ax = plt.axes([0., 0., 1., 1.])
+    color_set = 'bgrcmykw'
+    colors = [color_set[int(t)] for t in target]
+    plt.scatter(coords[:, 0], coords[:, 1], marker='o', s=200, c=colors)
+
+    return coords
+
+def mds_plot(points, target):
+=======
 def mds_plot(points, target, fig=1):
+>>>>>>> 51f696a7bf58c312757d88f09e67492af77c1068
     if target == []:
         target = np.zeros(len(points)).tolist()
     mds = manifold.MDS()
     coords = mds.fit_transform(points)
 
+<<<<<<< HEAD
+    fig = plt.figure()
+=======
     fig = plt.figure(fig)
+>>>>>>> 51f696a7bf58c312757d88f09e67492af77c1068
     ax = plt.axes([0., 0., 1., 1.])
     color_set = 'bgrcmykw'
     colors = [color_set[int(t)] for t in target]
