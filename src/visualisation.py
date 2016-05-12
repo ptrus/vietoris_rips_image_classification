@@ -28,8 +28,8 @@ if __name__ == '__main__':
     from preprocess import Preprocess, NoScaler
     from sklearn.preprocessing import StandardScaler
 
-    X,Y = load_dataset(['../data/tea_cup', '../data/tea_bag', '../data/spoon'])
-    p = Preprocess(0.75, NoScaler())
+    X,Y = load_dataset(['../data/cup', '../data/paper', '../data/pen'])
+    p = Preprocess(0.75)#, NoScaler())
     X = p.fit_transform(X)
     cords = mds_plot(X, Y)
     lines = [[1,2],[2,3],[3,1]]

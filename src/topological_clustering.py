@@ -76,9 +76,9 @@ if __name__ == '__main__':
 # Load data
     from sklearn.cross_validation import train_test_split
     from dataset import load_dataset
-    datasets = ['../data/tea_cup', '../data/spoon', '../data/apple']
+    datasets = ['../data/cup', '../data/pen', '../data/paper']
     X,y = load_dataset(datasets)
-    X, _, y, _ = train_test_split(X, y, test_size=0.75)
+    #X, _, y, _ = train_test_split(X, y, test_size=0.75)
     print "True classes:             ", y
 
 # Preprocess data

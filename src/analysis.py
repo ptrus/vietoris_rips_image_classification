@@ -2,7 +2,7 @@ from dataset import load_dataset
 from preprocess import Preprocess
 from dionysus import Rips, PairwiseDistances, ExplicitDistances, Filtration
 from image_utils import *
-from utils import interpolate
+from utils import interpolate, flatten
 import numpy as np
 from vietoris_rips import vietoris_rips
 from topological_clustering import TopologicalClustering,filter_simplices
@@ -35,7 +35,27 @@ def critical_edges(skeleton=1):
 def largest_sx(cx):
     return max(cx, key=len)
 
-def sx_mean(sx, size=(1296, 864)):
+def principal_sxs(cx):
+    cx_sorted = sorted(cx, key=len, reverse=True)
+    vs = map(set, cx_sorted)
+    mask = [True] * len(vs)
+    for i in range(len(vs)-1):
+        if mask[i]:
+            v1 = vs[i]
+        for j in range(i+1, len(vs)):
+            if mask[j]:
+                v2 = vs[j]
+                if len(v1.intersection(v2)) > 0:
+                    mask[j] = False
+    return [cx for m,cx in zip(mask, cx_sorted) if m]
+
+def vertex_in_cx(v, cx):
+    for sx in cx:
+        if v in sx:
+            return True
+    return False
+
+def sx_mean(sx, size=(1080, 810)):
     global n_classes, X, y, pp, X_tr, X_inv
     return to_image(np.mean(X_inv[sx], axis=0), size)
 
@@ -48,14 +68,14 @@ def all_sxs(skeleton=1):
     tc.fit(X_tr,y)
     return vietoris_rips(X_tr.tolist(), len(X), tc.r2)
 
-def interpolate_edge(edge, ts=0.5, size=(1296, 864)):
+def interpolate_edge(edge, ts=0.5, size=(1080, 810)):
     """ Return interpolated set of images from dataset with that lie on the edge. """
     global n_classes, X, y, pp, X_tr, X_inv
     if type(ts) is not list:
         ts = [ts]
     return [to_image(interpolate(X_inv[edge[0]], X_inv[edge[1]], t / 100.0), size) for t in ts]
 
-def get_processed_images(size=(1296, 864)):
+def get_processed_images(size=(1080, 810)):
     global n_classes, X, y, pp, X_tr, X_inv
     return [to_image(x, size) for x in X_inv]
 
@@ -70,11 +90,11 @@ def prepare_data(dataset, pca_n):
 
 
 if __name__ == "__main__":
-    prepare_data(['../data/tea_bag', '../data/spoon', '../data/tea_cup'], 0.7)
-
+    prepare_data(['../data/cup', '../data/paper', '../data/pen'], 0.7)
     save_all_images(get_processed_images(), "prc")
     print "edges:", critical_edges()
     print "largest dim sx:", largest_sx(all_sxs())
     ts = range(0, 100, 20) + [100]
     save_all_images(interpolate_edge(critical_edges()[-3], ts=ts), "edge")
     print "largest dim sx:", save_all_images([sx_mean(largest_sx(all_sxs()))], "sx")
+    print "princpals:", save_all_images([sx_mean(sx) for sx in principal_sxs(all_sxs())], "princ")
