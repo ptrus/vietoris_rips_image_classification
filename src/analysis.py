@@ -101,18 +101,8 @@ def prepare_data(dataset, pca_n):
 
 
 if __name__ == "__main__":
-##    prepare_data(['../data/cup', '../data/paper', '../data/pen'], 0.7)
-##    save_all_images(get_processed_images(), "prc")
-##    print "edges:", critical_edges()
-##    print "largest dim sx:", largest_sx(all_sxs())
-##    ts = range(0, 100, 20) + [100]
-##    save_all_images(interpolate_edge(critical_edges()[-3], ts=ts), "edge")
-##    print "largest dim sx:", save_all_images([sx_mean(largest_sx(all_sxs()))], "sx")
-##    print "princpals:", save_all_images([sx_mean(sx) for sx in principal_sxs(all_sxs())], "princ")
-
 # Plot results of single linkage and topological clustering using visualize
     prepare_data(['../data/cup', '../data/paper', '../data/pen'], 0.7)
-<<<<<<< HEAD
 
     #edges
 ##    print "edges in SL:", critical_edges()
@@ -123,13 +113,6 @@ if __name__ == "__main__":
     tc.fit(X_tr,y)
     topo_pred = tc.predict(X_tr)
     print "Topological clustering:   ", topo_pred
-
-    import scipy.spatial.distance as ssd
-    from scipy.cluster.hierarchy import linkage, fcluster
-    distances = PairwiseDistances(X_tr.tolist())
-    distances = ExplicitDistances(distances)
-    singlel_pred = fcluster(linkage(ssd.squareform(distances.distances)), n_classes, criterion='maxclust')
-    print "Single-linkage clustering:", singlel_pred
 
     #visualize
     cords = mds_transform(X_tr) #transform points
@@ -144,7 +127,6 @@ if __name__ == "__main__":
     plt.show()
     
 
-=======
     save_all_images(get_processed_images(), "prc")
     print "edges:", critical_edges()
     print "largest dim sx:", largest_sx(all_sxs())
@@ -152,4 +134,3 @@ if __name__ == "__main__":
     save_all_images(interpolate_edge(critical_edges()[-2], ts=ts), "edge1")
     save_all_images(interpolate_edge(critical_edges()[-1], ts=ts), "edge2")
     print "princpals:", save_all_images([sx_mean2(sx) for sx in principal_sxs(all_sxs())], "princ")
->>>>>>> 51f696a7bf58c312757d88f09e67492af77c1068
