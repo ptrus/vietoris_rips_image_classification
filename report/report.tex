@@ -37,6 +37,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{amsfonts}
 \usepackage{amsthm,amsmath,amssymb}
+\usepackage{cite}
 
 \usepackage{color}
 \newcommand{\todo}[1]{\textcolor{red}{TODO: #1}\PackageWarning{TODO:}{#1!}}
@@ -305,7 +306,7 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
 
   With this the final time complexity of our approach is $O((n^2 + n^2)\log n^2) = O(n^2 \log n)$ using $O(n^2)$ space. \todo{Double check the time complexity of union-find}
 
-  Contrast this with the computational complexity of single-linkage clustering, which with a clever implementation can in optimal case produce solution in $O(n^2)$ time and $O(n)$ space. \todo{Find reference from wikipedia}.
+  Contrast this with the computational complexity of single-linkage clustering, which with a clever implementation can in optimal case produce solution in $O(n^2)$ time and $O(n)$ space~\cite{gower1969minimum}.
 
 \end{homeworkSection}
 
@@ -337,30 +338,7 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
 \todo{Further work (if there even is any), what we didn't explore.}
 \end{homeworkProblem}
 
-%----------------------------------------------------------------------------------------
-%	Testing
-%----------------------------------------------------------------------------------------
-
-%----------------------------------------------------------------------------------------
-
-\begin{thebibliography}{9}
-
-\bibitem{lamport94}
-  Leslie Lamport,
-  \emph{\LaTeX: a document preparation system},
-  Addison Wesley, Massachusetts,
-  2nd edition,
-  1994.
-
-\bibitem{gower1969minimum,
-  title={Minimum spanning trees and single linkage cluster analysis},
-  author={Gower, John C and Ross, GJS},
-  journal={Applied statistics},
-  pages={54--64},
-  year={1969},
-  publisher={JSTOR}
-}
-
-\end{thebibliography}
+\bibliography{./bib}{}
+\bibliographystyle{plain}
 
 \end{document}
