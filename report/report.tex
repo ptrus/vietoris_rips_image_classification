@@ -10,11 +10,11 @@
 %
 % Note:
 % The \lipsum[#] commands throughout this template generate dummy text
-% to fill the template out. These commands should all be removed when 
+% to fill the template out. These commands should all be removed when
 % writing assignment content.
 %
 % This template uses a Perl script as an example snippet of code, most other
-% languages are also usable. Configure them in the "CODE INCLUSION 
+% languages are also usable. Configure them in the "CODE INCLUSION
 % CONFIGURATION" section.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -76,7 +76,7 @@
         keywordstyle=[1]\color{Blue}\bf, % Perl functions bold and blue
         keywordstyle=[2]\color{Purple}, % Perl function arguments purple
         keywordstyle=[3]\color{Blue}\underbar, % Custom functions underlined and blue
-        identifierstyle=, % Nothing special about identifiers                                         
+        identifierstyle=, % Nothing special about identifiers
         commentstyle=\usefont{T1}{pcr}{m}{sl}\color{MyDarkGreen}\small, % Comments small dark green courier font
         stringstyle=\color{Purple}, % Strings are purple
         showstringspaces=false, % Don't put marks in string spaces
@@ -258,7 +258,7 @@ Our intuition tells us, that the model we build using the VR-cx to classify the 
 Both algorithms take a set $X$ of $n$ samples with $m$ features as input. We can think of a sample $x$ in the set $X$ as a point in the $m$-dimensional space $x \in \mathbb{R}^{m}$. The algortihms then constructs a graph with points $X$ as the vertices ($V$) and edges $E$. The $k$ connected components in the constructed graph corespond to the classes of samples.
 
 \begin{paragraph}{Single linkage algorithm.}
-The algorithm starts with $n$ connected components (no edges in the graph). n each step the algorithm chooses the two connected components that are closest to each according to some distance metric $d$ (in our case the euclidean distance) and joins them into one by adding an edge between their closest two vertices. 
+The algorithm starts with $n$ connected components (no edges in the graph). n each step the algorithm chooses the two connected components that are closest to each according to some distance metric $d$ (in our case the euclidean distance) and joins them into one by adding an edge between their closest two vertices.
 
 \begin{definition}
 The distance $D$ between two connected components $A$ and $B$ is defined as the distance of the pair of vertices (one from $A$ and one from $B$) that are closest to each other. More formally
@@ -351,6 +351,15 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
   Addison Wesley, Massachusetts,
   2nd edition,
   1994.
+
+\bibitem{gower1969minimum,
+  title={Minimum spanning trees and single linkage cluster analysis},
+  author={Gower, John C and Ross, GJS},
+  journal={Applied statistics},
+  pages={54--64},
+  year={1969},
+  publisher={JSTOR}
+}
 
 \end{thebibliography}
 
