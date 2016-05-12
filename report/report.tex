@@ -30,6 +30,8 @@
 \usepackage{extramarks} % Required for headers and footers
 \usepackage[usenames,dvipsnames]{color} % Required for custom colors
 \usepackage{graphicx} % Required to insert images
+\usepackage{caption}
+\usepackage{subcaption}
 \usepackage{listings} % Required for insertion of code
 \usepackage{courier} % Required for the courier font
 \usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
@@ -322,6 +324,24 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
 \todo{Explain we get same results as with S-L clustering, and with that the same problems as S-L clustering.}
 
 \todo{Present MDS graph of our dataset after applying preprocessing, and emphasize different classes/recognized clusters.}
+\begin{paragraph}{Preprocessing results.}
+
+\begin{figure}[t!]
+    \centering
+    \begin{subfigure}[t]{0.4\textwidth}
+        \centering
+        \includegraphics[height=3.5cm]{img/mds_no_preprocessing}
+    \end{subfigure}
+   ~
+    \begin{subfigure}[t]{0.4\textwidth}
+        \centering
+        \includegraphics[height=3.5cm]{img/mds_preprocessing}
+        \end{subfigure}
+  \caption{Caption place holder}
+\end{figure}
+
+
+\end{paragraph}
 
 \todo{Explain that simplices of larger dimension are just about useless}
 

@@ -2,13 +2,13 @@ from sklearn import manifold
 from matplotlib import pyplot as plt
 import numpy as np
 
-def mds_plot(points, target):
+def mds_plot(points, target, fig=1):
     if target == []:
         target = np.zeros(len(points)).tolist()
     mds = manifold.MDS()
     coords = mds.fit_transform(points)
 
-    fig = plt.figure(1)
+    fig = plt.figure(fig)
     ax = plt.axes([0., 0., 1., 1.])
     color_set = 'bgrcmykw'
     colors = [color_set[int(t)] for t in target]
@@ -29,9 +29,13 @@ if __name__ == '__main__':
     from sklearn.preprocessing import StandardScaler
 
     X,Y = load_dataset(['../data/cup', '../data/paper', '../data/pen'])
-    p = Preprocess(0.75)#, NoScaler())
-    X = p.fit_transform(X)
     cords = mds_plot(X, Y)
-    lines = [[1,2],[2,3],[3,1]]
-    lines_plot(lines, cords)
-    plt.show()
+    plt.savefig('./mds_no_preprocessing.png')
+
+    p = Preprocess(0.75, NoScaler())
+    X = p.fit_transform(X)
+    cords = mds_plot(X, Y, fig=2)
+    plt.savefig('./mds_preprocessing.png')
+    #lines = [[1,2],[2,3],[3,1]]
+    #lines_plot(lines, cords)
+    #plt.show()
