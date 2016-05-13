@@ -415,8 +415,8 @@ We were also interested in finding out what images that lie between connected co
 
 \begin{homeworkSection}{General classification}
   
-\begin{paragraph}{Comparing performance with single-linkage clustering}
-We have shown in section~\ref{sec:relationsl} that single-linkage clustering produces the exact same results as our topological clustering method using VR-cx. In addition to the proof~\ref{theproof} we plotted the graphs built by both models to show this. The connected components of both graphs can be seen on figure~\ref{fig:sltcgraphs}. We can see the connected components are indeed the same and in this case they corespond to correct clusters.
+\begin{paragraph}{Comparing performance with single linkage clustering}
+We have shown in section relation to single linkage clustering, that single-linkage clustering produces the exact same results as our topological clustering method using VR-cx. In addition to the proof we plotted the graphs built by both models to demonstrate this. The connected components of both graphs can be seen on figure~\ref{fig:sltcgraphs}. We can see the connected components are indeed the same and in this case they corespond to correct clusters.
 
 \begin{figure}[t]
     \centering
@@ -433,29 +433,29 @@ We have shown in section~\ref{sec:relationsl} that single-linkage clustering pro
   \label{fig:sltcgraphs}
 \end{figure}
 
-The strong connection beetween the two algorithms however implies, that our classification model will face the same problems as single-linkage in other words, it will in escence fail on all datasets where the clusters are not as clearly seperated and/or contain outliers. To demonstrate this we ran both algorithms on one other ``bad'' dataset where the objects we photographed were not centered, nor were the pictures always shot from the same distance. The graphs build by the two algorithms can be seen on figure~\ref{fig:baddatagraphs}. Some samples from this dataset can be seen in figure~\ref{fig:baddata}.
+The strong connection beetween the two algorithms however implies, that our classification model will face the same problems as single linkage, in other words, it will fail on all datasets where the clusters are not as clearly seperated and/or contain outliers. To demonstrate this we ran both algorithms on one other ``bad'' dataset where the objects we photographed were not centered, nor were the pictures always shot from the same distance. The graphs build by the two algorithms can be seen on figure~\ref{fig:baddatagraphs}. It is clearly visible that the classification is bad. If we think a bit further we can also easily see, how outliers in our dataset will always cause the algortihm to fail in correctly classifiying the images. Some samples from this dataset can be seen in figure~\ref{fig:baddata}.
 
-%\begin{figure}[t!]
-%    \centering
-%    \includegraphics[height=7.5cm]{img/dataset}
-%    \caption{Sample images from the ``bad'' dataset.}
-%    \label{fig:baddata}
-%\end{figure}
+\begin{figure}[t!]
+    \centering
+    \includegraphics[width=1\textwidth, keepaspectratio]{img/bad_dataset_sample}
+    \caption{Sample images from the ``bad'' dataset.}
+    \label{fig:baddata}
+\end{figure}
 
-%\begin{figure}[t]
-%    \centering
-%    \begin{subfigure}[t]{0.4\textwidth}
-%        \centering
-%        \includegraphics[height=3.5cm]{img/SL_classes}
-%    \end{subfigure}
-%   ~
-%    \begin{subfigure}[t]{0.4\textwidth}
-%        \centering
-%        \includegraphics[height=3.5cm]{img/TC_classes}
-%        \end{subfigure}
-%  \caption{MDS plots visualizing the graphs build by both the single linkage clustering (left) and topological clustering using VR-cx (right) on ``bad'' dataset.}
-%  \label{fig:baddatagraphs}
-%\end{figure}
+\begin{figure}[t]
+    \centering
+    \begin{subfigure}[t]{0.4\textwidth}
+        \centering
+        \includegraphics[height=3.5cm]{img/bad_graph_sl}
+    \end{subfigure}
+   ~
+    \begin{subfigure}[t]{0.4\textwidth}
+        \centering
+        \includegraphics[height=3.5cm]{img/bad_graph_tc}
+        \end{subfigure}
+  \caption{MDS plots visualizing the graphs build by both the single linkage clustering (left) and topological clustering using VR-cx (right) on ``bad'' dataset.}
+  \label{fig:baddatagraphs}
+\end{figure}
 
 \end{paragraph}
 

@@ -102,7 +102,7 @@ def prepare_data(dataset, pca_n):
 
 if __name__ == "__main__":
 # Plot results of single linkage and topological clustering using visualize
-    prepare_data(['../data/cup', '../data/paper', '../data/pen'], 0.7)
+    prepare_data(['../bad_data/apple', '../bad_data/tea_bag', '../bad_data/tea_cup'], 0.7)
 
     #edges
 ##    print "edges in SL:", critical_edges()
@@ -119,33 +119,33 @@ if __name__ == "__main__":
 ##    cords_tc = mds_plot(X_tr, topo_pred)
     lines_sl = critical_edges()[:-2] #lines from sl algo
     lines_tc = filter_simplices(all_sxs(), 1) #lines from tc algo
-    plot_points(cords, topo_pred) #plot points
+    plot_points(cords, y) #plot points
     lines_plot(lines_sl, cords, color = "grey")
     plt.show()
-    plot_points(cords, topo_pred) #plot points
+    plot_points(cords, y) #plot points
     lines_plot(lines_tc, cords, color = "grey")
-    plt.savefig('./vr_cx.png')
+    plt.savefig('../report/img/bad_graph_sl.png')
     
 
-    samples = np.array([0, 2, 7, 8, 9, 10, 13, 14, 15, 18, 20, 22, 23, 25, 28])
-    save_all_images([to_image(x, size=(1080, 810)) for x in np.array(X)[samples]], "orig")
-    save_all_images(get_processed_images(), "prc")
-    print "edges:", critical_edges()
-    print "largest dim sx:", largest_sx(all_sxs())
-    ts = range(0, 100, 20) + [100]
-    save_all_images(interpolate_edge(critical_edges()[-2], ts=ts), "edge1")
-    save_all_images(interpolate_edge(critical_edges()[-1], ts=ts), "edge2")
-    princ = principal_sxs(all_sxs())
-    print "Principal sxs:", len(princ)
-    plot_points(cords, topo_pred)
-    k=0
-    for p in princ:
-        princ_edges = []
-        for i in range(len(p)-1):
-            for j in range(i + 1, len(p)):
-                princ_edges.append([p[i], p[j]])
-        lines_plot(princ_edges, cords, color=np.random.rand(3,1)) 
-        if len(p) > 1:
-            k += 1
-    plt.savefig('./vr_princ.png') 
-    print "princpals:", save_all_images([sx_mean2(sx) for sx in princ], "princ")
+##    samples = np.array([0, 2, 7, 8, 9, 10, 13, 14, 15, 18, 20, 22, 23, 25, 28])
+##    save_all_images([to_image(x, size=(1080, 810)) for x in np.array(X)[samples]], "orig")
+##    save_all_images(get_processed_images(), "prc")
+##    print "edges:", critical_edges()
+##    print "largest dim sx:", largest_sx(all_sxs())
+##    ts = range(0, 100, 20) + [100]
+##    save_all_images(interpolate_edge(critical_edges()[-2], ts=ts), "edge1")
+##    save_all_images(interpolate_edge(critical_edges()[-1], ts=ts), "edge2")
+##    princ = principal_sxs(all_sxs())
+##    print "Principal sxs:", len(princ)
+##    plot_points(cords, topo_pred)
+##    k=0
+##    for p in princ:
+##        princ_edges = []
+##        for i in range(len(p)-1):
+##            for j in range(i + 1, len(p)):
+##                princ_edges.append([p[i], p[j]])
+##        lines_plot(princ_edges, cords, color=np.random.rand(3,1)) 
+##        if len(p) > 1:
+##            k += 1
+##    plt.savefig('./vr_princ.png') 
+##    print "princpals:", save_all_images([sx_mean2(sx) for sx in princ], "princ")
