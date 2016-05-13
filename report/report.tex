@@ -225,13 +225,20 @@ As the title implies, the idea behind the project is to use the Vietoris-Rips (i
 \begin{figure}[t!]
     \centering
     \includegraphics[height=7.5cm]{img/inverse_dataset}
-    \caption{Images from figure \ref{fig:data} after applying preprocessing and inverse preprocessing steps to them.}
+    \caption{Images from figure \ref{fig:data} after applying preprocessing steps to them.}
     \label{fig:inv}
+\end{figure}
+
+\begin{figure}[t!]
+    \centering
+    \includegraphics[height=5.0cm]{img/cls}
+    \caption{Converting a set of images into one large matrix for use with our model.}
+    \label{fig:conv}
 \end{figure}
 
 For our dataset we used grayscale photographs of 3 different objects: a paper cup, crumpled up paper and a pen. Each of the objects was photographed 10 times from slightly different angles and under different illumination. The sizes of the images were $1080$ pixels in width and $810$ pixels in height. A selection of these photographs can be seen in figure \ref{fig:data}.
 
-  We can think of images as matrices of size $(n \times m)$ where each entry represents the intensity of the corresponding pixel (meaning in our case we had $30$ matrices of size $1080 \times 810$). With images in grayscale color space, each of the values is an integer between $0$ (black) and $255$ (white). In order to prepare the dataset for evaluation with our classification model, we flattened image's matrix into one long vector of size $n m$ (first row of the matrix being first $n$ elements, second row the next $n$ and so on $m$ times). We then stacked all individual vectors vertically to form a large matrix with $30$ rows, one for each individual image, and $n m$ columns, one for each individual pixel.
+We can think of images as matrices of size $(n \times m)$ where each entry represents the intensity of the corresponding pixel (meaning in our case we had $30$ matrices of size $1080 \times 810$). With images in grayscale color space, each of the values is an integer between $0$ (black) and $255$ (white). In order to prepare the dataset for evaluation with our classification model, we flattened image's matrix into one long vector of size $n m$ (first row of the matrix being first $n$ elements, second row the next $n$ and so on $m$ times). We then stacked all individual vectors vertically to form a large matrix with $30$ rows, one for each individual image, and $n m$ columns, one for each individual pixel. Figure \ref{fig:conv} shows this process graphically, which may help to properly undestand it.
 
   Because we wanted to help our model as much as possible via preprocessing, we scaled/transformed the values of each pixel either using a standard scaler, or by subtracting mean and scaling values to the $[-1, 1]$ interval. The main motivation behind this was to remove varying illumination from our dataset.
 
@@ -451,8 +458,6 @@ The strong connection beetween the two algorithms however implies, that our clas
 %\end{figure}
 
 \end{paragraph}
-
-  \todo{[A] Extra tests: iris, \ldots}
 
 \begin{paragraph}{Modifying algorithm to prefer simplices of larger dimension.}  
   Because we proved that our basic model that only considers simplices of dimension 1 produces identical results as single-linkage clustering algorithm, and because VR cx can produce simplices of higher dimensions, we wondered if we could somehow use those to increase robustness of our algorithm. The main idea is that if some vertices are present in a simplex of higher dimension, they are more likely to be a part of the same class (since all the points are bunched up closer together). Unfortunately this turned out to be useless in practice, as even simplices of higher dimension are still built based on some distance metric between points, and if two clusters of different classes are close enough together, they may form a simplex of very large dimension resulting in a incorrect classification. The idea also would not work too well on thin, long clusters as seen in figure \ref{fig:mds_preprocessing}. On top of everything, this would also add a second parameter (dimension in addition to $r$), that the model has to balance out to produce desired number of clusters, and we would have to construct simplices of dimensions $\ge 1$ at each run of VR algorithm, further increasing the computational complexity with potentially no benefit.
