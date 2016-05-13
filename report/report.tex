@@ -392,13 +392,11 @@ Initially we tested if the model is able to distinguish the already mentioned im
 
 \end{paragraph}
 
-
-\begin{paragraph}{Components differences}
+\begin{paragraph}{Intercluster edges}  
   \todo{[A] Pick one (or several) edges in V1 which is not in V2 and reconstruct the image corresponding
 to the midpoint. This should somehow capture the difference between the
 two components connected by this edge. Does it?}
 \end{paragraph}
-
 
 \end{homeworkSection}
 
@@ -410,6 +408,10 @@ two components connected by this edge. Does it?}
   \todo{[R] Show bad results on our first dataset.}
 
   \todo{[A] Extra tests: iris, \ldots}
+
+\begin{paragraph}{Modifying algorithm to prefer simplices of larger dimension.}  
+  Because we proved that our basic model that only considers simplices of dimension 1 produces identical results as single-linkage clustering algorithm, and because VR cx can produce simplices of higher dimensions, we wondered if we could somehow use those to increase robustness of our algorithm. The main idea is that if some vertices are present in a simplex of higher dimension, they are more likely to be a part of the same class (since all the points are bunched up closer together). Unfortunately this turned out to be useless in practice, as even simplices of higher dimension are still built based on some distance metric between points, and if two clusters of different classes are close enough together, they may form a simplex of very large dimension resulting in a incorrect classification. The idea also would not work too well on thin, long clusters as seen in figure \ref{fig:mds_preprocessing}. On top of everything, this would also add a second parameter (dimension in addition to $r$), that the model has to balance out to produce desired number of clusters, and we would have to construct simplices of dimensions $\ge 1$ at each run of VR algorithm, further increasing the computational complexity with potentially no benefit.
+\end{paragraph}
 
 \end{homeworkSection}
 \end{homeworkProblem}
