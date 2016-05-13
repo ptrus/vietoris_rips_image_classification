@@ -463,12 +463,18 @@ The strong connection beetween the two algorithms however implies, that our clas
   Because we proved that our basic model that only considers simplices of dimension 1 produces identical results as single-linkage clustering algorithm, and because VR cx can produce simplices of higher dimensions, we wondered if we could somehow use those to increase robustness of our algorithm. The main idea is that if some vertices are present in a simplex of higher dimension, they are more likely to be a part of the same class (since all the points are bunched up closer together). Unfortunately this turned out to be useless in practice, as even simplices of higher dimension are still built based on some distance metric between points, and if two clusters of different classes are close enough together, they may form a simplex of very large dimension resulting in a incorrect classification. The idea also would not work too well on thin, long clusters as seen in figure \ref{fig:mds_preprocessing}. On top of everything, this would also add a second parameter (dimension in addition to $r$), that the model has to balance out to produce desired number of clusters, and we would have to construct simplices of dimensions $\ge 1$ at each run of VR algorithm, further increasing the computational complexity with potentially no benefit.
 \end{paragraph}
 
+\begin{paragraph}{Using our model with other datasets}  
+  Of course our model can be used to classify (or cluster) datasets with completely different attributes. To prove the point, we tried it on the Iris dataset, which consists of 3 classes with 50 instances each, each class being a different type of Iris plant. There are 4 numeric attributes in total: sepal width and length of the flower, and its petal width and length  (all in centimeters). One of the classes is linearly separable from the other two, while the other two are very intertwined. 
+
+  To verify that our model in fact works, we first ran it on Iris dataset and told it to simply find 2 clusters, which it successfully managed to do (it clustered the dataset into exactly the linearly separated class and the intertwined one). Telling it to find 3 clusters however did not work so well: while it was still able to properly cluster one class, it made a cluster out of both remaining ones and found a single ``outlier'' sample that was slightly further away from other samples.
+\end{paragraph}
+
 \end{homeworkSection}
 \end{homeworkProblem}
 
 \begin{homeworkProblem}[Summary]
 
-  Classification of images using Vietoris-Rips complex is equivalent to one of the most basic hierarchical clustering algorithms, single-linkage clustering. It thus has the very same problems and is highly dependent on good preprocessing of the dataset into well separated clusters. At the same time, it has a significantly worse performance in both time and space requirements.
+  Classification of images using Vietoris-Rips complex is equivalent to one of the most basic hierarchical clustering algorithms, single-linkage clustering. It thus has the very same problems and is highly dependent on good preprocessing of the dataset into well separated groups. At the same time, it has a significantly worse performance in both time and space requirements.
 
   While additional intercluster connections that VR cx constructs are interesting from various viewpoints, we fail to see any practical value from them, especially in relation to our problem. We also are not sure about the usefulness of higher dimensional simplices, predominantly given how quickly they can increase time complexity and make the model unusable.
 
@@ -476,14 +482,14 @@ The strong connection beetween the two algorithms however implies, that our clas
 
 \begin{homeworkProblem}[Workload]
 
-  \todo{Write here about your work on the project and I ([A]) will then summarize it into a paragraph or two.}
+  Our project workload was split among the members fairly. We met biweekly and mostly worked together, sharing ideas and findings. To give a brief overview of what each member did:
   \begin{itemize}
-    \item P: Prepared Preprocessing class (StandardScaler, PCA), prepared VR-cx, added MDS visualizations, tested different scalers.
-    \item R: Took photographs, wrote a formal proof on the connection to single-linkage clustering, helped with the implemetation of the model, implemented step-by-step visualisation of building the model
-    \item A: Implemented methods for loading/saving images, preparing the dataset for use in the model, implemented the model, converted original images to grayscale and resized them,
+    \item P prepared preprocessing class (StandardScaler, PCA) and wrote a nice abstraction for VR-cx from Dionysus library, added MDS visualizations which were used to reason about the dataset, and played around testing different scalers to see what effect they have on separability of classes;
+    \item R took the photographs, wrote a formal proof on the connection of our model to single-linkage clustering, helped with the implemetation of the final model and implemented step-by-step visualisation of building the model which was very useful in building our understanding of how it works and why it works the way it does; and finally
+    \item A implemented methods for loading and saving images, converted original images to grayscale, resized them and turned them into a dataset that could be used the model, and finally implemented the the model itself.
   \end{itemize}
 \end{homeworkProblem}
-A more detailed overview of each member's workload can be seen at github repository of our project: \url{https://github.com/ptrus/vietoris_rips_image_classification/commits/master}.
+The analysis of the model and final results were a joint effort, as was writing this final report. A more detailed overview of each member's workload can be seen at github repository of our project: \url{https://github.com/ptrus/vietoris_rips_image_classification/commits/master}.
 
 
 \bibliography{./bib}{}
