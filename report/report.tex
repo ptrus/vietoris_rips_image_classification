@@ -203,7 +203,7 @@
 %----------------------------------------------------------------------------------------
 
 \begin{homeworkProblem}[Project description]
-As the title implies, the idea behind the project is to use the Vietoris-Rips (in future abreviated VR-cx) complex for image classification. We took pictures of three generic objects and preprocessed them so we obtained their vector representations. The vector representations of images can then be looked upon as points in some $n$-dimensional space $\mathbb{R}^{n}$. Over this points we build the VR-cx for two different parameters. We use the complexes to build a classification model for the images and classify them. We also perform several interesting tests on the generated VR-cx.
+As the title implies, the idea behind the project is to use the Vietoris-Rips complex (from here on VR-cx) for image classification. We took pictures of three generic objects and preprocessed them so we obtained their vector representations. The vector representations of images can then be looked on as points in some $n$-dimensional space $\mathbb{R}^{n}$. We build the VR-cx over these points for two different parameters. We use the complexes as a classification model for the images and classify them. We also perform several interesting tests on the generated VR-cx.
 \end{homeworkProblem}
 
 %----------------------------------------------------------------------------------------
@@ -224,32 +224,33 @@ As the title implies, the idea behind the project is to use the Vietoris-Rips (i
 
 \begin{figure}[t!]
     \centering
-    \includegraphics[height=7.5cm]{img/inverse_dataset}
-    \caption{Images from figure \ref{fig:data} after applying preprocessing steps to them.}
-    \label{fig:inv}
-\end{figure}
-
-\begin{figure}[t!]
-    \centering
     \includegraphics[height=5.0cm]{img/cls}
     \caption{Converting a set of images into one large matrix for use with our model.}
     \label{fig:conv}
 \end{figure}
 
-For our dataset we used grayscale photographs of 3 different objects: a paper cup, crumpled up paper and a pen. Each of the objects was photographed 10 times from slightly different angles and under different illumination. The sizes of the images were $1080$ pixels in width and $810$ pixels in height. A selection of these photographs can be seen in figure \ref{fig:data}.
+\begin{figure}[t!]
+    \centering
+    \includegraphics[height=7.5cm]{img/inverse_dataset}
+    \caption{Images from figure \ref{fig:data} after applying preprocessing steps to them.}
+    \label{fig:inv}
+\end{figure}
 
-We can think of images as matrices of size $(n \times m)$ where each entry represents the intensity of the corresponding pixel (meaning in our case we had $30$ matrices of size $1080 \times 810$). With images in grayscale color space, each of the values is an integer between $0$ (black) and $255$ (white). In order to prepare the dataset for evaluation with our classification model, we flattened image's matrix into one long vector of size $n m$ (first row of the matrix being first $n$ elements, second row the next $n$ and so on $m$ times). We then stacked all individual vectors vertically to form a large matrix with $30$ rows, one for each individual image, and $n m$ columns, one for each individual pixel. Figure \ref{fig:conv} shows this process graphically, which may help to properly undestand it.
+For our dataset we used grayscale photographs of 3 different objects: a coffee cup, crumpled up paper and a pen. Each of the objects was photographed 10 times from slightly different angles and under different illumination. The sizes of the images were $1080$ pixels in width and $810$ pixels in height. A selection of these photographs can be seen in figure \ref{fig:data}.
+
+We can think of images as matrices of size $(a \times b)$ where each entry represents the intensity of the corresponding pixel (meaning in our case we had $30$ matrices of size $1080 \times 810$). With images in grayscale color space, each of the values is an integer between $0$ (black) and $255$ (white). In order to prepare the dataset for evaluation with our classification model, we flattened each image's matrix into one long vector of size $n m$ (first row of the matrix being first $b$ elements, second row the next $b$ and so on $a$ times). We then stacked all individual vectors vertically to form a large matrix with $n = 30$ rows, one for each individual image, and $a b$ columns, one for each individual pixel. Figure \ref{fig:conv} shows this process graphically, which may help to properly undestand it.
 
   Because we wanted to help our model as much as possible via preprocessing, we scaled/transformed the values of each pixel either using a standard scaler, or by subtracting mean and scaling values to the $[-1, 1]$ interval. The main motivation behind this was to remove varying illumination from our dataset.
 
-  With this however we are still left with a matrix of very high dimensions, so in order to reduce processing time, decrease redundancy and amount of noise, we apply principal component analysis to it. With this we can to reduce the number of columns from $n \times m$ to but a few which makes the dataset much more manageable. Figure \ref{fig:inv} shows same sample of images as in figure \ref{fig:data} after applying both scaling and principal component analysis (and inverting both operations).
+  With this however we are still left with a very large matrix, so in order to reduce processing time, decrease redundancy and amount of noise, we apply principal component analysis (PCA for short) to it. With this we can to reduce the number of columns from $a b$ to but a few, which makes the dataset much more manageable. Figure \ref{fig:inv} shows same sample of images as in figure \ref{fig:data} after applying both scaling and principal component analysis (and inverting both operations).
 \end{homeworkProblem}
 
 %----------------------------------------------------------------------------------------
 %	The classification model
 %----------------------------------------------------------------------------------------
 
-\begin{homeworkProblem}[The classification model] \label{prob:model}
+\begin{homeworkProblem}[The classification model]
+ \label{prob:model}
 
 \begin{definition}[Vietoris-Rips complex]
 \label{defa}
@@ -274,7 +275,7 @@ We say that disjoint subsets $A_{1}...A_{k}$ of vertices $V$ in graph $G(V,E)$ a
 
 Given the input of $n$ $m$-dimensional points $X \in \mathbb{R}^{m}$ and a metric $d$ (in our case the eulidian distance) we build a VR-cx for parameter $r = r_{2}$, where $r_{2}$ is the biggest $r$ such that the VR-cx has three connected components. We find the parameter $r_{2}$ using a binary search on a set of all possible values of $r$. We then perform the classification, simply by saying that all the objects in some connected component belong to the same class. Seeing as we have three connected components in our VR-cx we will get three distinct classes.\\
 
-It does not take much thought to see, that our classification model will produce the exact same results if we  only use simplices of dimension $1$, as it would, if we use all the simplices up to dimension $h$, where $h$ is an arbitrary number in the range $h \in 1...m$. This follows from Definition~\ref{defa}.
+It does not take much thinking to see that our classification model will produce the exact same results regardless of whether we only use simplices of dimension $1$, or if we used all the simplices up to dimension $h$, where $h$ is an arbitrary number in the range $h \in 1...m$. This follows from Definition~\ref{defa}.
 
 \label{sec:relationsl}
 \begin{homeworkSection}{Relation to single linkage clustering algorithm}
@@ -297,7 +298,7 @@ The algorithm stops when there are only $k$ connected components left.
 \end{paragraph}
 
 \begin{paragraph}{Vietoris-Rips classification algorithm.}
-The algorithm builds a ($1$-dimensional) Vietoris-Rips complex $V_{r}(X)$ with parameter $r$. We choose the biggest $r$ such that the Vietoris-Rips complex $V_{r}(X)$ has $k$ connected components.
+The algorithm builds a ($1$-dimensional) Vietoris-Rips complex $V_{r}(X)$ with parameter $r$. We choose the biggest $r$ such that the VR-cx $V_{r}(X)$ has $k$ connected components.
 \end{paragraph}
 \\
 \\
@@ -327,9 +328,9 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
 
 \begin{homeworkSection}{Computational complexity}
 
-  Let us now consider the computational complexity of our model. Since we are only interested in Vietoris-Rips complexes $VR_r$ with simplices of dimension $1$, the simplest approach to construct such complex requires us to check the distance between every pair of vertices $(x_1, x_2) \in X \times X$, adding such pair to the final complex if the distance $d(x_1, x_2) \le r$. In worst case the algorithm would have to return all distinct pairs of vertices, meaning construction of $VR_r(X)$ requires $O(n^2)$ time and consumes $O(n^2)$ space, where $n$ is the number of vertices in $X$.
+  Let us now consider the computational complexity of our model. Since we are only interested in Vietoris-Rips complexes $VR_r$ with simplices of dimension $1$, the simplest approach to construct such complex requires us to check the distance between every pair of vertices $(v_1, v_2) \in V \times V$, adding such pair to the final complex if the distance $d(v_1, v_2) \le r$. In worst case the algorithm would have to return all distinct pairs of vertices, meaning construction of $VR_r(V)$ requires $O(n^2)$ time and consumes $O(n^2)$ space, where $n$ is the number of vertices in $V$.
 
-  The problem is that we don't know the appropriate value for the parameter $r$. Recall that we are interested in finding biggest $r$, such that the Vietoris-Rips complex $VR_{r}$ has as many connected components as there are distinct classes of images. Let $r_{max}$ denote the largest distance between two vertices from $X$. Note that $r$ we are looking for will always be bounded on the interval $[0, r_{max}]$, and it will furthermore be exactly one of the distances between some pair of vertices. Thus we only have $n^2$ different possible values of $r$ to check, and if we sort them by size and use binary search to find the right one, we can do it in $O(n^2 \log n^2) = O(n^2 \log n)$ time and $O(n^2)$ space. To count the number of connected components obtained with every different $VR$ complexes, we can use a \texttt{union-find} algorithm, which at worst adds $O(n^2)$ time to each run.
+  The problem is that we don't know the appropriate value for the parameter $r$. Recall that we are interested in finding biggest $r$, such that the Vietoris-Rips complex $VR_{r}$ has as many connected components as there are distinct classes of images. Let $r_{max}$ denote the largest distance between two vertices from $X$. Note that $r$ we are looking for will always be bounded on the interval $[0, r_{max}]$, and it will furthermore be exactly one of the distances between some pair of vertices. Thus we only have $n^2$ different possible values of $r$ we need to check, and if we sort them by size and use binary search to find the right one, we can do it in $O(n^2 \log n^2 + \log n^2) = O(n^2 \log n)$ time and $O(n^2)$ space. To count the number of connected components obtained with every different $VR$ complexes, we can use a \texttt{union-find} algorithm, which at worst adds $O(n^2)$ time to each run.
 
   With this the final time complexity of our approach is $O(n^2 \log n^2 + (n^2 + n^2)\log n^2) = O(n^2 \log n)$ using $O(n^2)$ space. Contrast this with the computational complexity of single-linkage clustering, which with a clever implementation can in optimal case produce solution in $O(n^2)$ time and $O(n)$ space~\cite{gower1969minimum}.
 
@@ -347,8 +348,8 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
 
 \begin{homeworkSection}{Cup, paper, pen image set}
 
-\begin{paragraph}{Effect of preprocessing}
-We were interested in observing the effect of the preprocessing methods on the samples of our dataset. For this purpose we visualized the data-points using multidimensional scaling technique (MDS)~\cite{borg2005modern}. MDS is a means of visualizing the level of similarity of individual cases from $N$-dimensional space, to a lower, $M$ dimensional space (in our case: $M=2$), while preserving between-object distances as good as possible. Therefore MDS plots are well suited for giving intuition of how separable data samples of different classes are. The obtained plots are shown in figure~\ref{fig:mds_preprocessing}. We notice that in both cases the points can be clearly separated into three clusters. We can also observe that points within clusters seem to lie closer together in the preprocessed plot than in the non preprocessed one. It should be mentioned that the position of points in a MDS plot is randomized, and that only distances between points should be observed. Therefore the reader should not confuse the different positions of each of the clusters in the plots as an effect of the preprocessing, since the reason for it is merely a property of the MDS method.
+\begin{paragraph}{Effect of preprocessing.}
+We were interested in observing the effect of the preprocessing methods on the samples of our dataset. For this purpose we visualized the data-points using multidimensional scaling technique (MDS)~\cite{borg2005modern}. MDS is a means of visualizing the level of similarity of individual cases from $N$-dimensional space, to a lower, $M$ dimensional space (in our case: $M=2$), while preserving between-object distances as well as possible. Therefore MDS plots are well suited for giving intuition of how separable data samples of different classes are. The obtained plots are shown in figure~\ref{fig:mds_preprocessing}. We notice that in both cases the points can be clearly separated into three clusters. We can also observe that points within clusters seem to lie closer together in the preprocessed plot than in the non preprocessed one. It should be mentioned that the position of points in a MDS plot is randomized, and that only distances between points should be observed. Therefore the reader should not confuse the different positions of each of the clusters in the plots as an effect of the preprocessing, since the reason for it is merely a property of the MDS method.
 
 \begin{figure}[t]
     \centering
@@ -377,7 +378,7 @@ We were interested in observing the effect of the preprocessing methods on the s
 \end{figure}
 
 
-Initially we tested if the model is able to distinguish the images of cup, paper and pen. The images were preprocessed with scaling and a PCA transformation. The VR-cx obtained is shown in fig~\ref{fig:vr_cx}. The model had no problems distinguishing between the three classes of images. Each one of the three connected components obtained was belonging to one of the three classes of images. This is not surprising as the three classes of points are clearly separable.
+Initially we tested if the model is able to distinguish the images of cup, paper and pen. The images were preprocessed with scaling between values of $[-1, 1]$, as described in section Obtaining and preprocessing data, and a PCA transformation with $0.75$ explained variance. The VR-cx obtained is shown in fig~\ref{fig:vr_cx}. The model had no problems distinguishing between the three classes of images. Each one of the three connected components obtained was belonging to one of the three classes of images. This is not surprising as the three classes of points are clearly separable.
 \end{paragraph}
 
 \begin{figure}[h]
@@ -394,11 +395,11 @@ Initially we tested if the model is able to distinguish the images of cup, paper
     \label{fig:princ_barycenters}
 \end{figure}
 
-\begin{paragraph}{Principal simplices}are simplicies which are not faces of any bigger complex. In the built VR-cx we observed 14 principal simplicies, which are drawn in figure~\ref{fig:vr_princ}. We can notice that each of the principal simplicies is connecting points within same classes. In~\ref{fig:princ_barycenters} the images representing barycenteer points of each of the principal simplices are presented. It is interesting to see that there are as many principal simplicies connecting ``pen''-points, as there are ``paper'' and ``cup'' principal simplicies all together. The intuition for this is that since pen is a ``pointy'' object, small rotations of the image cause bigger changes in the image than if the object is rounder (which is the case at paper and cup images).
+\begin{paragraph}{Principal simplices.} In constructed VR-cx we observed 14 principal simplicies (i.e. simplicies which are not faces of any bigger complex), which are shown in figure~\ref{fig:vr_princ}. We can notice that each of the principal simplicies is connecting points within same classes. In figure~\ref{fig:princ_barycenters} the images representing barycenteer points of each of the principal simplices are presented. It is interesting to see that there are as many principal simplicies connecting ``pen''-points, as there are ``paper'' and ``cup'' principal simplicies all together. The intuition for this is that since pen is a ``pointy'' object, small rotations of the image cause bigger changes in the image than if the object is rounder (which is the case with paper and cup images).
 
 \end{paragraph}
 
-\begin{paragraph}{Intercluster edges}  
+\begin{paragraph}{Intercluster edges.}  
 
 \begin{figure}[h]
     \centering
@@ -406,7 +407,7 @@ Initially we tested if the model is able to distinguish the images of cup, paper
     \caption{Reconstructed images along various points on 2 edges that join 3 connected components into 1.}
     \label{fig:edges}
 \end{figure}
-We were also interested in finding out what images that lie between connected componets look like. To this end, figure \ref{fig:edges} shows reconstructed images that would lie on shortest two edges which would join all 3 clusters into one, at distances $0$, $25\%$, $50\%$, $75\%$ and $100\%$ along the edges. Note that leftmost and rightmost images are actually images from our dataset (after applying preprocessing steps), while the rest are all completely artificial. Despite this, they still very much resemble just taking affine combinations of values of corresponding pixels. With this we conclude that the images at $50\%$ do not capture the difference between two connected components, but rather their similarity.
+We were also interested in finding out what images that lie between connected componets look like. To this end, figure \ref{fig:edges} shows reconstructed images that would lie on shortest two edges which would join all 3 clusters into one, at distances $0\%$, $25\%$, $50\%$, $75\%$ and $100\%$ along the edges. Note that leftmost and rightmost images are actually images from our dataset (after applying preprocessing steps), while the rest are all completely artificial. Despite this, they still very much resemble just taking affine combinations of values of corresponding pixels. With this we conclude that the images at $50\%$ do not capture the difference between two connected components, but rather their similarity.
 
 \end{paragraph}
 
@@ -415,8 +416,8 @@ We were also interested in finding out what images that lie between connected co
 
 \begin{homeworkSection}{General classification}
   
-\begin{paragraph}{Comparing performance with single linkage clustering}
-We have shown in section relation to single linkage clustering, that single-linkage clustering produces the exact same results as our topological clustering method using VR-cx. In addition to the proof we plotted the graphs built by both models to demonstrate this. The connected components of both graphs can be seen on figure~\ref{fig:sltcgraphs}. We can see the connected components are indeed the same and in this case they corespond to correct clusters.
+\begin{paragraph}{Comparing performance with single linkage clustering.}
+We have shown in section Relation to single linkage clustering, that single-linkage clustering produces the exact same results as our topological clustering method using VR-cx. In addition to the proof we plotted the graphs built by both models to demonstrate this. The connected components of both graphs can be seen on figure~\ref{fig:sltcgraphs}. We can see the connected components are indeed the same and in this case they corespond to correct clusters.
 
 \begin{figure}[t]
     \centering
@@ -433,7 +434,7 @@ We have shown in section relation to single linkage clustering, that single-link
   \label{fig:sltcgraphs}
 \end{figure}
 
-The strong connection beetween the two algorithms however implies, that our classification model will face the same problems as single linkage, in other words, it will fail on all datasets where the clusters are not as clearly seperated and/or contain outliers. To demonstrate this we ran both algorithms on one other ``bad'' dataset where the objects we photographed were not centered, nor were the pictures always shot from the same distance. The graphs build by the two algorithms can be seen on figure~\ref{fig:baddatagraphs}. It is clearly visible that the classification is bad. If we think a bit further we can also easily see, how outliers in our dataset will always cause the algortihm to fail in correctly classifiying the images. Some samples from this dataset can be seen in figure~\ref{fig:baddata}.
+The strong connection beetween the two algorithms however also implies, that our classification model will face the same problems as single linkage, in other words, it will fail on all datasets where the clusters are not as clearly seperated and/or contain outliers. To demonstrate this we ran both algorithms on one other ``bad'' dataset where the objects we photographed were not centered, nor were the pictures always shot from the same distance. The graphs build by the two algorithms can be seen on figure~\ref{fig:baddatagraphs}. It is clearly visible that the classification is bad. If we think a bit further we can also easily see, how outliers in our dataset will always cause the algortihm to fail in correctly classifiying the images. Some samples from this dataset can be seen in figure~\ref{fig:baddata}.
 
 \begin{figure}[t!]
     \centering
@@ -459,14 +460,14 @@ The strong connection beetween the two algorithms however implies, that our clas
 
 \end{paragraph}
 
-\begin{paragraph}{Modifying algorithm to prefer simplices of larger dimension.}  
-  Because we proved that our basic model that only considers simplices of dimension 1 produces identical results as single-linkage clustering algorithm, and because VR cx can produce simplices of higher dimensions, we wondered if we could somehow use those to increase robustness of our algorithm. The main idea is that if some vertices are present in a simplex of higher dimension, they are more likely to be a part of the same class (since all the points are bunched up closer together). Unfortunately this turned out to be useless in practice, as even simplices of higher dimension are still built based on some distance metric between points, and if two clusters of different classes are close enough together, they may form a simplex of very large dimension resulting in a incorrect classification. The idea also would not work too well on thin, long clusters as seen in figure \ref{fig:mds_preprocessing}. On top of everything, this would also add a second parameter (dimension in addition to $r$), that the model has to balance out to produce desired number of clusters, and we would have to construct simplices of dimensions $\ge 1$ at each run of VR algorithm, further increasing the computational complexity with potentially no benefit.
-\end{paragraph}
-
-\begin{paragraph}{Using our model with other datasets}  
+\begin{paragraph}{Using our model with other datasets.}
   Of course our model can be used to classify (or cluster) datasets with completely different attributes. To prove the point, we tried it on the Iris dataset, which consists of 3 classes with 50 instances each, each class being a different type of Iris plant. There are 4 numeric attributes in total: sepal width and length of the flower, and its petal width and length  (all in centimeters). One of the classes is linearly separable from the other two, while the other two are very intertwined. 
 
   To verify that our model in fact works, we first ran it on Iris dataset and told it to simply find 2 clusters, which it successfully managed to do (it clustered the dataset into exactly the linearly separated class and the intertwined one). Telling it to find 3 clusters however did not work so well: while it was still able to properly cluster one class, it made a cluster out of both remaining ones and found a single ``outlier'' sample that was slightly further away from other samples.
+\end{paragraph}
+
+\begin{paragraph}{Modifying algorithm to prefer simplices of larger dimension.}  
+  Because we proved that our basic model that only considers simplices of dimension 1 produces identical results as single-linkage clustering algorithm, and because VR cx can produce simplices of higher dimensions, we wondered if we could somehow use those to increase robustness of our algorithm. The main idea is that if some vertices are present in a simplex of higher dimension, they are more likely to be a part of the same class (since all the points are bunched up closer together). Unfortunately this turned out to be useless in practice, as even simplices of higher dimension are still built based on some distance metric between points, and if two clusters of different classes are close enough together, they may form a simplex of very large dimension resulting in a incorrect classification. The idea also would not work too well on thin, long clusters as seen in figure \ref{fig:mds_preprocessing}. On top of everything, this would also add a second parameter (optimal dimension in addition to $r$), that the model has to balance out to produce desired number of clusters, and we would have to construct simplices of dimensions $\ge 1$ at each run of VR algorithm, further increasing the computational complexity with potentially no benefit.
 \end{paragraph}
 
 \end{homeworkSection}
