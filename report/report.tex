@@ -225,7 +225,7 @@ As the title implies, the idea behind the project is to use the Vietoris-Rips (i
 \begin{figure}[t!]
     \centering
     \includegraphics[height=7.5cm]{img/inverse_dataset}
-    \caption{Images from figure \ref{fig:data} after applying preprocessing and inverse preprocessing steps to them. \todo{No reference anywhere in the text}}
+    \caption{Images from figure \ref{fig:data} after applying preprocessing and inverse preprocessing steps to them.}
     \label{fig:inv}
 \end{figure}
 
@@ -235,7 +235,7 @@ For our dataset we used grayscale photographs of 3 different objects: a paper cu
 
   Because we wanted to help our model as much as possible via preprocessing, we scaled/transformed the values of each pixel either using a standard scaler, or by subtracting mean and scaling values to the $[-1, 1]$ interval. The main motivation behind this was to remove varying illumination from our dataset.
 
-With this however we are still left with a matrix of very high dimensions, so in order to reduce processing time, decrease redundancy and amount of noise, we apply principal component analysis to it. With this we can to reduce the number of columns from $n \times m$ to but a few which makes the dataset much more manageable.
+  With this however we are still left with a matrix of very high dimensions, so in order to reduce processing time, decrease redundancy and amount of noise, we apply principal component analysis to it. With this we can to reduce the number of columns from $n \times m$ to but a few which makes the dataset much more manageable. Figure \ref{fig:inv} shows same sample of images as in figure \ref{fig:data} after applying both scaling and principal component analysis (and inverting both operations).
 \end{homeworkProblem}
 
 %----------------------------------------------------------------------------------------
@@ -389,15 +389,18 @@ Initially we tested if the model is able to distinguish the images of cup, paper
 
 \begin{paragraph}{Principal simplices}are simplicies which are not faces of any bigger complex. In the built VR-cx we observed 14 principal simplicies, which are drawn in figure~\ref{fig:vr_princ}. We can notice that each of the principal simplicies is connecting points within same classes. In~\ref{fig:princ_barycenters} the images representing barycenteer points of each of the principal simplices are presented. It is interesting to see that there are as many principal simplicies connecting ``pen''-points, as there are ``paper'' and ``cup'' principal simplicies all together. The intuition for this is that since pen is a ``pointy'' object, small rotations of the image cause bigger changes in the image than if the object is rounder (which is the case at paper and cup images).
 
-  \todo{[A] Explain that simplices of larger dimension are just about useless}
-
-
 \end{paragraph}
 
 \begin{paragraph}{Intercluster edges}  
-  \todo{[A] Pick one (or several) edges in V1 which is not in V2 and reconstruct the image corresponding
-to the midpoint. This should somehow capture the difference between the
-two components connected by this edge. Does it?}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=5cm]{img/edges}
+    \caption{Reconstructed images along various points on 2 edges that join 3 connected components into 1.}
+    \label{fig:edges}
+\end{figure}
+We were also interested in finding out what images that lie between connected componets look like. To this end, figure \ref{fig:edges} shows reconstructed images that would lie on shortest two edges which would join all 3 clusters into one, at distances $0$, $25\%$, $50\%$, $75\%$ and $100\%$ along the edges. Note that leftmost and rightmost images are actually images from our dataset (after applying preprocessing steps), while the rest are all completely artificial. Despite this, they still very much resemble just taking affine combinations of values of corresponding pixels. With this we conclude that the images at $50\%$ do not capture the difference between two connected components, but rather their similarity.
+
 \end{paragraph}
 
 \end{homeworkSection}
@@ -460,9 +463,10 @@ The strong connection beetween the two algorithms however implies, that our clas
 
 \begin{homeworkProblem}[Summary]
 
-  \todo{[A] Brief summary}
+  Classification of images using Vietoris-Rips complex is equivalent to one of the most basic hierarchical clustering algorithms, single-linkage clustering. It thus has the very same problems and is highly dependent on good preprocessing of the dataset into well separated clusters. At the same time, it has a significantly worse performance in both time and space requirements.
 
-  \todo{[A] Further work (if there even is any), what we didn't explore.}
+  While additional intercluster connections that VR cx constructs are interesting from various viewpoints, we fail to see any practical value from them, especially in relation to our problem. We also are not sure about the usefulness of higher dimensional simplices, predominantly given how quickly they can increase time complexity and make the model unusable.
+
 \end{homeworkProblem}
 
 \begin{homeworkProblem}[Workload]
