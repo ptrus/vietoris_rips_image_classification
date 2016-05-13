@@ -116,14 +116,14 @@
 
 % Header and footer for when a page split occurs within a problem environment
 \newcommand{\enterProblemHeader}[1]{
-\nobreak\extramarks{#1}{#1 continued on next page\ldots}\nobreak
-\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
+%\nobreak\extramarks{#1}{#1 continued on next page\ldots}\nobreak
+%\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
 }
 
 % Header and footer for when a page split occurs between problem environments
 \newcommand{\exitProblemHeader}[1]{
-\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
-\nobreak\extramarks{#1}{}\nobreak
+%\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
+%\nobreak\extramarks{#1}{}\nobreak
 }
 
 \setcounter{secnumdepth}{0} % Removes default section numbers
@@ -367,7 +367,7 @@ We were interested in observing the effect of the preprocessing methods on the s
 
 \end{paragraph}
 
-\begin{paragraph}{Image classification.}  In this section we present the results of Vietoris-Rips classification algorithm described in section~\ref{prob:model}. \todo{Why is this reference not shown?}
+\begin{paragraph}{Image classification.}  In this section we present the results of Vietoris-Rips classification algorithm described in the previous section.
 
 \begin{figure}[h]
     \centering
