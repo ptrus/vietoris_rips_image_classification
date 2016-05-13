@@ -203,7 +203,7 @@
 %----------------------------------------------------------------------------------------
 
 \begin{homeworkProblem}[Project description]
-As the title implies, the idea behind the project is to use the Vietoris-Rips (in future abreviated VR-cx) complex for image classification. We took pictures of three generic objects and preprocessed them so we obtained vector representations of pictures. The vector representations of images can then be looked upon as points in some $n$-dimensional space $\mathbb{R}^{n}$. Over this points we build the VR-cx for two different parameters. We use the complexes to build a classification model for the images and classify them. We also perform several interesting tests on the generated VR-cx.
+As the title implies, the idea behind the project is to use the Vietoris-Rips (in future abreviated VR-cx) complex for image classification. We took pictures of three generic objects and preprocessed them so we obtained their vector representations. The vector representations of images can then be looked upon as points in some $n$-dimensional space $\mathbb{R}^{n}$. Over this points we build the VR-cx for two different parameters. We use the complexes to build a classification model for the images and classify them. We also perform several interesting tests on the generated VR-cx.
 \end{homeworkProblem}
 
 %----------------------------------------------------------------------------------------
@@ -269,7 +269,9 @@ Given the input of $n$ $m$-dimensional points $X \in \mathbb{R}^{m}$ and a metri
 
 It does not take much thought to see, that our classification model will produce the exact same results if we  only use simplices of dimension $1$, as it would, if we use all the simplices up to dimension $h$, where $h$ is an arbitrary number in the range $h \in 1...m$. This follows from Definition~\ref{defa}.
 
+\label{sec:relationsl}
 \begin{homeworkSection}{Relation to single linkage clustering algorithm}
+
 
 Our intuition tells us, that the model we build using the VR-cx to classify the images, produces the same results as the well known single linkage clustering algorithm. In this section we aim to prove or at least give a strong intuition that this is indeed the case.
 
@@ -299,6 +301,7 @@ Let $G_{sl}(V, E_{sl})$ be a graph produced by the single linkage algorithm for 
 \end{claim}
 
 \begin{proof}
+\label{theproof}
 We prove the Claim~\ref{claima} by induction on the steps in the single linkage algorithm. We start with a set of vertices $V$. Let $j$ denote the step (iteration) of the algorithm, $e_{j}$ the edge added in $j$-th step and $d_{j}$ its length. We claim that at each $j$ the graph $G_{sl}^{j}$ constructed by the algorithm up to that point, has the exact same conected components as $G_{vr}^{j}$, that is the graph induced by the Vietoris-Rips complex $VR_{d_{j}}(V)$.
 
 \begin{paragraph}{Base case.}For $j=0$ this is obvious, since this is the initial state of the algorithm. Both graphs $G_{sl}^{0}$ and $G_{vr}^{0}$ consist only of vertices $V$. For $j=1$ the algorithm adds the smallest edge $e_{1}$ out of all possible candidates and builds a graph $G_{sl}^{1}$. Edge $e_{1}$ has length $d_{1}$. It is obvious that $VR_{d_{1}}(V)$ will induce a graph $G_{vr}^{1}$ that will also only contain edge $e_{1}$, since no other pairwise distance between vertices $V$ is smaller.
@@ -401,10 +404,50 @@ two components connected by this edge. Does it?}
 
 
 \begin{homeworkSection}{General classification}
+  
+\begin{paragraph}{Comparing performance with single-linkage clustering}
+We have shown in section~\ref{sec:relationsl} that single-linkage clustering produces the exact same results as our topological clustering method using VR-cx. In addition to the proof~\ref{theproof} we plotted the graphs built by both models to show this. The connected components of both graphs can be seen on figure~\ref{fig:sltcgraphs}. We can see the connected components are indeed the same and in this case they corespond to correct clusters.
 
-  \todo{[R] Explain we get same results as with S-L clustering, and with that the same problems as S-L clustering.}
+\begin{figure}[t]
+    \centering
+    \begin{subfigure}[t]{0.4\textwidth}
+        \centering
+        \includegraphics[height=3.5cm]{img/SL_classes}
+    \end{subfigure}
+   ~
+    \begin{subfigure}[t]{0.4\textwidth}
+        \centering
+        \includegraphics[height=3.5cm]{img/TC_classes}
+        \end{subfigure}
+  \caption{MDS plots visualizing the graphs build by both the single linkage clustering (left) and topological clustering using VR-cx (right) on our dataset.}
+  \label{fig:sltcgraphs}
+\end{figure}
 
-  \todo{[R] Show bad results on our first dataset.}
+The strong connection beetween the two algorithms however implies, that our classification model will face the same problems as single-linkage in other words, it will in escence fail on all datasets where the clusters are not as clearly seperated and/or contain outliers. To demonstrate this we ran both algorithms on one other ``bad'' dataset where the objects we photographed were not centered, nor were the pictures always shot from the same distance. The graphs build by the two algorithms can be seen on figure~\ref{fig:baddatagraphs}. Some samples from this dataset can be seen in figure~\ref{fig:baddata}.
+
+%\begin{figure}[t!]
+%    \centering
+%    \includegraphics[height=7.5cm]{img/dataset}
+%    \caption{Sample images from the ``bad'' dataset.}
+%    \label{fig:baddata}
+%\end{figure}
+
+%\begin{figure}[t]
+%    \centering
+%    \begin{subfigure}[t]{0.4\textwidth}
+%        \centering
+%        \includegraphics[height=3.5cm]{img/SL_classes}
+%    \end{subfigure}
+%   ~
+%    \begin{subfigure}[t]{0.4\textwidth}
+%        \centering
+%        \includegraphics[height=3.5cm]{img/TC_classes}
+%        \end{subfigure}
+%  \caption{MDS plots visualizing the graphs build by both the single linkage clustering (left) and topological clustering using VR-cx (right) on ``bad'' dataset.}
+%  \label{fig:baddatagraphs}
+%\end{figure}
+
+\end{paragraph}
 
   \todo{[A] Extra tests: iris, \ldots}
 
@@ -427,7 +470,7 @@ two components connected by this edge. Does it?}
   \todo{Write here about your work on the project and I ([A]) will then summarize it into a paragraph or two.}
   \begin{itemize}
     \item P: Prepared Preprocessing class (StandardScaler, PCA), prepared VR-cx, added MDS visualizations, tested different scalers.
-    \item R:
+    \item R: Took photographs, wrote a formal proof on the connection to single-linkage clustering, helped with the implemetation of the model, implemented step-by-step visualisation of building the model
     \item A: Implemented methods for loading/saving images, preparing the dataset for use in the model, implemented the model, converted original images to grayscale and resized them,
   \end{itemize}
 \end{homeworkProblem}
