@@ -8,6 +8,7 @@ from vietoris_rips import vietoris_rips
 from topological_clustering import TopologicalClustering,filter_simplices
 from connected_components import connected_components, n_connected_components
 from visualisation import *
+from matplotlib.pyplot import cm 
 
 def uniq(cx):
     return set(map(tuple, cx))
@@ -138,13 +139,12 @@ if __name__ == "__main__":
     print "Principal sxs:", len(princ)
     plot_points(cords, topo_pred)
     k=0
-    c = "ycmkwycmkwycmkw" 
     for p in princ:
         princ_edges = []
         for i in range(len(p)-1):
             for j in range(i + 1, len(p)):
                 princ_edges.append([p[i], p[j]])
-        lines_plot(princ_edges, cords, color=c[k]) 
+        lines_plot(princ_edges, cords, color=np.random.rand(3,1)) 
         if len(p) > 1:
             k += 1
     plt.savefig('./vr_princ.png') 
