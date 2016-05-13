@@ -9,7 +9,6 @@ from topological_clustering import TopologicalClustering,filter_simplices
 from connected_components import connected_components, n_connected_components
 from visualisation import *
 
-
 def uniq(cx):
     return set(map(tuple, cx))
 
@@ -87,8 +86,9 @@ def interpolate_edge(edge, ts=0.5, size=(1080, 810)):
     return [to_image(invert(interpolate(X_tr[edge[0]], X_tr[edge[1]], t / 100.0)), size) for t in ts]
 
 def get_processed_images(size=(1080, 810)):
-    global n_classes, X, y, pp, X_tr, X_inv
-    return [to_image(x, size) for x in X_inv]
+    global n_classes, X, y, pp, X_tr, X_inv, samples
+    return [to_image(x, size) for x in np.array(X_inv)[samples]]
+    # return [to_image(x, size) for x in X_inv]
 
 
 def prepare_data(dataset, pca_n):
@@ -127,6 +127,8 @@ if __name__ == "__main__":
     plt.show()
     
 
+    samples = np.array([0, 2, 7, 8, 9, 10, 13, 14, 15, 18, 20, 22, 23, 25, 28])
+    save_all_images([to_image(x, size=(1080, 810)) for x in np.array(X)[samples]], "orig")
     save_all_images(get_processed_images(), "prc")
     print "edges:", critical_edges()
     print "largest dim sx:", largest_sx(all_sxs())

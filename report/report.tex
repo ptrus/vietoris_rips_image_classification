@@ -40,6 +40,7 @@
 \usepackage{amsfonts}
 \usepackage{amsthm,amsmath,amssymb}
 \usepackage{cite}
+\usepackage{hyperref}
 
 \usepackage{color}
 \newcommand{\todo}[1]{\textcolor{red}{TODO: #1}\PackageWarning{TODO:}{#1!}}
@@ -214,13 +215,27 @@ As the title implies, the idea behind the project is to use the Vietoris-Rips (i
 \begin{homeworkProblem}[Obtaining and preprocessing data]
 %Listing \ref{homework_example} shows a Perl script.
 
-  \todo{[A]Show the images}
+\begin{figure}[t!]
+    \centering
+    \includegraphics[height=7.5cm]{img/dataset}
+    \caption{Sample images from used dataset.}
+    \label{fig:data}
+\end{figure}
 
-For our dataset we used grayscale photographs of 3 different objects: a paper cup, crumpled up paper and a pen. Each of the objects was photographed 10 times from slightly different angles and under different illumination. The sizes of the images were $1080$ pixels in width and $810$ pixels in height.
+\begin{figure}[t!]
+    \centering
+    \includegraphics[height=7.5cm]{img/inverse_dataset}
+    \caption{Images from figure \ref{fig:data} after applying preprocessing and inverse preprocessing steps to them. \todo{No reference anywhere in the text}}
+    \label{fig:inv}
+\end{figure}
 
-  We can think of images as matrices of size $(n \times m)$ where each entry represents the intensity of the corresponding pixel (meaning in our case we had $30$ matrices of size $1080 \times 810$). With images in grayscale color space, each of the values has an integer value between $0$ (black) and $255$ (white). In order to then prepare the dataset for evaluation with our classification model, we flattened each matrix into one long vector of size $n m$ (first row of the matrix being first $n$ elements, second row the next $n$ and so on $m$ times). We then stacked all individual vectors vertically to form a large matrix with $30$ rows, one for each individual image, and $n m$ columns, one for each individual pixel.
+For our dataset we used grayscale photographs of 3 different objects: a paper cup, crumpled up paper and a pen. Each of the objects was photographed 10 times from slightly different angles and under different illumination. The sizes of the images were $1080$ pixels in width and $810$ pixels in height. A selection of these photographs can be seen in figure \ref{fig:data}.
 
-With this we are left with a very large matrix, and in order to reduce processing time and decrease amount of noise, we apply principal component analysis, reducing number of columns from $n \times m$ to just a few
+  We can think of images as matrices of size $(n \times m)$ where each entry represents the intensity of the corresponding pixel (meaning in our case we had $30$ matrices of size $1080 \times 810$). With images in grayscale color space, each of the values is an integer between $0$ (black) and $255$ (white). In order to prepare the dataset for evaluation with our classification model, we flattened image's matrix into one long vector of size $n m$ (first row of the matrix being first $n$ elements, second row the next $n$ and so on $m$ times). We then stacked all individual vectors vertically to form a large matrix with $30$ rows, one for each individual image, and $n m$ columns, one for each individual pixel.
+
+  Because we wanted to help our model as much as possible via preprocessing, we scaled/transformed the values of each pixel either using a standard scaler, or by subtracting mean and scaling values to the $[-1, 1]$ interval. The main motivation behind this was to remove varying illumination from our dataset.
+
+With this however we are still left with a matrix of very high dimensions, so in order to reduce processing time, decrease redundancy and amount of noise, we apply principal component analysis to it. With this we can to reduce the number of columns from $n \times m$ to but a few which makes the dataset much more manageable.
 \end{homeworkProblem}
 
 %----------------------------------------------------------------------------------------
@@ -304,11 +319,9 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
 
   Let us now consider the computational complexity of our model. Since we are only interested in Vietoris-Rips complexes $VR_r$ with simplices of dimension $1$, the simplest approach to construct such complex requires us to check the distance between every pair of vertices $(x_1, x_2) \in X \times X$, adding such pair to the final complex if the distance $d(x_1, x_2) \le r$. In worst case the algorithm would have to return all distinct pairs of vertices, meaning construction of $VR_r(X)$ requires $O(n^2)$ time and consumes $O(n^2)$ space, where $n$ is the number of vertices in $X$.
 
-  The problem is that we don't know the appropriate value for the parameter $r$. Recall that we are interested in finding biggest $r$, such that the Vietoris-Rips complex $VR_{r}$ has as many connected components as there are distinct classes of images. Let $r_{max}$ denote the largest distance between two vertices from $X$. Note that $r$ we are looking for will always be bounded on the interval $[0, r_{max}]$, and it will furthermore be exactly one of the distances between some pair of vertices. Thus we only have $n^2$ different possible values of $r$ to check, and if we sort them by size and use binary search to find the right one, we can do it in $O(n \log n)$ time and $O(n^2)$ space. To count the number of connected components obtained with each of different $VR$ complexes, we can use a \texttt{union-find} algorithm, which roughly adds a $O(n^2)$ time to each run.
+  The problem is that we don't know the appropriate value for the parameter $r$. Recall that we are interested in finding biggest $r$, such that the Vietoris-Rips complex $VR_{r}$ has as many connected components as there are distinct classes of images. Let $r_{max}$ denote the largest distance between two vertices from $X$. Note that $r$ we are looking for will always be bounded on the interval $[0, r_{max}]$, and it will furthermore be exactly one of the distances between some pair of vertices. Thus we only have $n^2$ different possible values of $r$ to check, and if we sort them by size and use binary search to find the right one, we can do it in $O(n^2 \log n^2) = O(n^2 \log n)$ time and $O(n^2)$ space. To count the number of connected components obtained with every different $VR$ complexes, we can use a \texttt{union-find} algorithm, which at worst adds $O(n^2)$ time to each run.
 
-  With this the final time complexity of our approach is $O((n^2 + n^2)\log n^2) = O(n^2 \log n)$ using $O(n^2)$ space. \todo{Double check the time complexity of union-find}
-
-  Contrast this with the computational complexity of single-linkage clustering, which with a clever implementation can in optimal case produce solution in $O(n^2)$ time and $O(n)$ space~\cite{gower1969minimum}.
+  With this the final time complexity of our approach is $O(n^2 \log n^2 + (n^2 + n^2)\log n^2) = O(n^2 \log n)$ using $O(n^2)$ space. Contrast this with the computational complexity of single-linkage clustering, which with a clever implementation can in optimal case produce solution in $O(n^2)$ time and $O(n)$ space~\cite{gower1969minimum}.
 
 \end{homeworkSection}
 
@@ -373,9 +386,10 @@ two components connected by this edge. Does it?}
   \begin{itemize}
     \item P:
     \item R:
-    \item A:
+    \item A: Implemented methods for loading/saving images, preparing the dataset for use in the model, implemented the model, converted original images to grayscale and resized them, 
   \end{itemize}
 \end{homeworkProblem}
+A more detailed overview of each member's workload can be seen at github repository of our project: \url{https://github.com/ptrus/vietoris_rips_image_classification/commits/master}.
 
 
 \bibliography{./bib}{}
