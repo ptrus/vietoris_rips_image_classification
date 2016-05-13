@@ -49,7 +49,7 @@ if __name__ == '__main__':
     cords = mds_plot(X, Y)
     plt.savefig('./mds_no_preprocessing.png')
 
-    p = Preprocess(0.75, NoScaler())
+    p = Preprocess(0.75)#, NoScaler())
     X = p.fit_transform(X)
     cords = mds_plot(X, Y, fig=2)
     plt.savefig('./mds_preprocessing.png')

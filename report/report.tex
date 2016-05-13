@@ -242,7 +242,7 @@ With this however we are still left with a matrix of very high dimensions, so in
 %	The classification model
 %----------------------------------------------------------------------------------------
 
-\begin{homeworkProblem}[The classification model]
+\begin{homeworkProblem}[The classification model] \label{prob:model}
 
 \begin{definition}[Vietoris-Rips complex]
 \label{defa}
@@ -334,8 +334,9 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
 \end{homeworkProblem}
 
 \begin{homeworkProblem}[Results]
-  \todo{[P] Present MDS graph of our dataset after applying preprocessing, and emphasize different classes/recognized clusters.}
-\begin{paragraph}{Preprocessing results.}
+
+\begin{homeworkSection}{Effect of preprocessing}
+We were interested in observing the effect of the preprocessing methods on the samples of our dataset. For this purpose we visualized the data-points using multidimensional scaling technique (MDS)~\cite{borg2005modern}. MDS is a means of visualizing the level of similarity of individual cases from $N$-dimensional space, to a lower, $M$ dimensional space (in our case: $M=2$), while preserving between-object distances as good as possible. Therefore MDS plots are well suited for giving intuition how separable data samples of different classes are. The obtained plots are shown in figure~\ref{fig:mds_preprocessing}. We notice that in both cases the points can be clearly separated into three clusters. We can also observe that points within clusters seem to lie closer together in the preprocessed plot than in the non preprocessed one. It should be mentioned that the position of points in a MDS plot is randomized, and that only distances between points should be observed. Therefore the reader should not confuse the different positions of each of the clusters in the plots as an effect of the preprocessing, since the reason for it is merely a property of the MDS method.
 
 \begin{figure}[t!]
     \centering
@@ -348,29 +349,51 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
         \centering
         \includegraphics[height=3.5cm]{img/mds_preprocessing}
         \end{subfigure}
-  \caption{Caption place holder}
+  \caption{MDS plots visualizing cup (blue), paper (red), and pen (green) samples from the dataset. Left figure is the original dataset. Right figure shows the scaled and PCA transformed dataset. Euclidean distance metric was used.}
+  \label{fig:mds_preprocessing}
 \end{figure}
 
-\end{paragraph}
+\end{homeworkSection}
 
   \todo{[P] Do the components of the complex V2 distinguish between the three classes? }
 
-  \todo{[R] Explain we get same results as with S-L clustering, and with that the same problems as S-L clustering.}
 
-  \todo{[R] Show bad results on our first dataset.}
+\begin{homeworkSection}{Cup, paper, pen image set}
+In this section we present the results of Vietoris-Rips classification algorithm described in section~\ref{prob:model}. \todo{Why is the reference not working?}
 
-  \todo{[A] Explain that simplices of larger dimension are just about useless}
+\begin{paragraph}{Image classification.}  Initially we tested if the model is able to distinguish the already mentioned images of cup, paper and pen. The images were preprocessed, as explained before, with scaling and a PCA transformation. The model had no problems distinguishing between the three classes of images. Each one of the three connected components obtained, was belonging to one of the three classes of images. This is not surprising since looking already mentioned MDS plots~\ref{fig:mds_preprocessing}, the three different classes of points are clearly separable.
+\end{paragraph}
+
+\begin{paragraph}{Principal simplices}
 
   \todo{[P] Do the prinicipal simplices (that is, the simplices which are not faces of any bigger
 simplex) of the complex V2 connect similar images? What does the image corresponding
 to the barycenter of such a simplex look like?}
 
+  \todo{[A] Explain that simplices of larger dimension are just about useless}
+
+
+\end{paragraph}
+
+
   \todo{[A] Pick one (or several) edges in V1 which is not in V2 and reconstruct the image corresponding
 to the midpoint. This should somehow capture the difference between the
 two components connected by this edge. Does it?}
 
+
+
+\end{homeworkSection}
+
+
+\begin{homeworkSection}{General classification}
+
+  \todo{[R] Explain we get same results as with S-L clustering, and with that the same problems as S-L clustering.}
+
+  \todo{[R] Show bad results on our first dataset.}
+
   \todo{[A] Extra tests: iris, \ldots}
 
+\end{homeworkSection}
 \end{homeworkProblem}
 
 \begin{homeworkProblem}[Summary]
@@ -384,9 +407,9 @@ two components connected by this edge. Does it?}
 
   \todo{Write here about your work on the project and I ([A]) will then summarize it into a paragraph or two.}
   \begin{itemize}
-    \item P:
+    \item P: Prepared Preprocessing class (StandardScaler, PCA), prepared VR cx, added MDS visualizations, tested different scalers.
     \item R:
-    \item A: Implemented methods for loading/saving images, preparing the dataset for use in the model, implemented the model, converted original images to grayscale and resized them, 
+    \item A: Implemented methods for loading/saving images, preparing the dataset for use in the model, implemented the model, converted original images to grayscale and resized them,
   \end{itemize}
 \end{homeworkProblem}
 A more detailed overview of each member's workload can be seen at github repository of our project: \url{https://github.com/ptrus/vietoris_rips_image_classification/commits/master}.
