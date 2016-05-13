@@ -420,9 +420,10 @@ We were also interested in finding out what images that lie between connected co
 
 \begin{homeworkProblem}[Summary]
 
-  \todo{[A] Brief summary}
+  Classification of images using Vietoris-Rips complex is equivalent to one of the most basic hierarchical clustering algorithms, single-linkage clustering. It thus has the very same problems and is highly dependent on good preprocessing of the dataset into well separated clusters. At the same time, it has a significantly worse performance in both time and space requirements.
 
-  \todo{[A] Further work (if there even is any), what we didn't explore.}
+  While additional intercluster connections that VR cx constructs are interesting from various viewpoints, we fail to see any practical value from them, especially in relation to our problem. We also are not sure about the usefulness of higher dimensional simplices, predominantly given how quickly they can increase time complexity and make the model unusable.
+
 \end{homeworkProblem}
 
 \begin{homeworkProblem}[Workload]
