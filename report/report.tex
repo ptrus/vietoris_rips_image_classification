@@ -408,7 +408,7 @@ Initially we tested if the model is able to distinguish the images of cup, paper
     \caption{Reconstructed images along various points on 2 edges that join 3 connected components into 1.}
     \label{fig:edges}
 \end{figure}
-We were also interested in finding out what do images that lie between connected components look like. To this end, figure \ref{fig:edges} shows reconstructed images that would lie on shortest two edges which would join all 3 clusters into one, at distances $0\%$, $25\%$, $50\%$, $75\%$ and $100\%$ along the edges. Note that leftmost and rightmost images are actually images from our dataset (after applying preprocessing steps), while the rest are all completely artificial. Despite this, they still very much resemble just taking affine combinations of values of corresponding pixels. With this we conclude that the images at $50\%$ do not capture the difference between two connected components, but rather their similarity.
+We were also interested in finding out what do images that lie between connected components look like. Figure \ref{fig:edges} shows reconstructed images that would lie on shortest two edges which would join all 3 clusters into one, at distances $0\%$, $25\%$, $50\%$, $75\%$ and $100\%$ along the edges. Note that leftmost and rightmost images are actually images from our dataset (after applying preprocessing steps), while the rest are all completely artificial. Despite this, they still very much resemble just taking affine combinations of values of corresponding pixels. With this we conclude that the images at $50\%$ do not capture the difference between two connected components, but rather their similarity.
 
 \end{paragraph}
 
