@@ -203,7 +203,7 @@
 %----------------------------------------------------------------------------------------
 
 \begin{homeworkProblem}[Project description]
-As the title implies, the idea behind the project is to use the Vietoris-Rips complex (from here on VR-cx) for image classification. We took pictures of three generic objects and preprocessed them so we obtained their vector representations. The vector representations of images can then be looked on as points in some $n$-dimensional space $\mathbb{R}^{n}$. We build the VR-cx over these points for two different parameters. We use the complexes as a classification model for the images and classify them. We also perform several interesting tests on the generated VR-cx.
+As the title implies, the idea behind the project is to use the Vietoris-Rips complex (from here on VR-cx) for image classification. We took pictures of three generic objects and preprocessed them so we obtained their vector representations. The vector representations of images can then be looked on as points in some $m$-dimensional space $\mathbb{R}^{m}$. We build the VR-cx over these points for two different parameters. We use the complexes as a classification model for the images and classify them. We also perform several interesting tests on the generated VR-cx.
 \end{homeworkProblem}
 
 %----------------------------------------------------------------------------------------
@@ -238,7 +238,7 @@ As the title implies, the idea behind the project is to use the Vietoris-Rips co
 
 For our dataset we used grayscale photographs of 3 different objects: a coffee cup, crumpled up paper and a pen. Each of the objects was photographed 10 times from slightly different angles and under different illumination. The sizes of the images were $1080$ pixels in width and $810$ pixels in height. A selection of these photographs can be seen in figure \ref{fig:data}.
 
-We can think of images as matrices of size $(a \times b)$ where each entry represents the intensity of the corresponding pixel (meaning in our case we had $30$ matrices of size $1080 \times 810$). With images in grayscale color space, each of the values is an integer between $0$ (black) and $255$ (white). In order to prepare the dataset for evaluation with our classification model, we flattened each image's matrix into one long vector of size $a b$ (first row of the matrix being first $b$ elements, second row the next $b$ and so on $a$ times). We then stacked all individual vectors vertically to form a large matrix with $n = 30$ rows, one for each individual image, and $a b$ columns, one for each individual pixel. Figure \ref{fig:conv} shows this process graphically, which may help to properly undestand it.
+We can think of images as matrices of size $(a \times b)$ where each entry represents the intensity of the corresponding pixel (meaning in our case we had $30$ matrices of size $1080 \times 810$). With images in grayscale color space, each of the values is an integer between $0$ (black) and $255$ (white). In order to prepare the dataset for evaluation with our classification model, we flattened each image's matrix into one long vector of size $a b$ (first row of the matrix being first $b$ elements, second row the next $b$ and so on $a$ times). We then stacked all individual vectors vertically to form a large matrix with $n = 30$ rows, one for each individual image, and $a b$ columns, one for each individual pixel. Figure \ref{fig:conv} shows this process graphically, which may help the reader properly undestand the process.
 
   Because we wanted to help our model as much as possible via preprocessing, we scaled/transformed the values of each pixel either using a standard scaler, or by subtracting mean and scaling values to the $[-1, 1]$ interval. The main motivation behind this was to remove varying illumination from our dataset.
 
@@ -252,15 +252,15 @@ We can think of images as matrices of size $(a \times b)$ where each entry repre
 \begin{homeworkProblem}[The classification model]
  \label{prob:model}
 
-\begin{definition}[Vietoris-Rips complex]
+\begin{definition}[Vietoris-Rips complex~\cite{dyinglovegrape}]
 \label{defa}
-Let $X$ be a set of $m$-dimensional points $X \in \mathbb{R}^{m}$ and let $d$ be a metric. Pick a parameter $r > 0$. Construct a simplicial complex as follows:
+Let $X$ be a set of $n$ $m$-dimensional points $X \in \mathbb{R}^{m}$ and let $d$ be a metric. Pick a parameter $r > 0$. Construct a simplicial complex as follows:
 \begin{itemize}
 	\item Add a $0$-simplex for each point in $X$.
 	\item For $x_{1}, x_{2} \in X$ add a $1$-simplex between $x_{1}, x_{2}$ if $d(x_{1}, x_{2}) \leq r$.
 	\item For $x_{1}, x_{2}, x_{3} \in X$ add a $2$-simplex with vertices $x_{1}, x_{2}, x_{3}$ if $d(x_{1}, x_{2}), d(x_{1}, x_{3}), d(x_{2}, x_{3}) \leq r$.
-	\item ...
-	\item For $x_{1}, x_{2}, ... , x_{m} \in X$, add a $(m-1)$-simplex with vertices $x_{1}, x_{2}, ..., x_{m}$ if $d(x_{i}, x_{j}) \leq r$ for $0 \leq i,j \leq m$; that is, if all the points are within a distance of $r$ from each other.
+	\item \ldots
+	\item For $x_{1}, x_{2}, \ldots, x_{n} \in X$, add a $(n-1)$-simplex with vertices $x_{1}, x_{2}, \ldots, x_{n}$ if $d(x_{i}, x_{j}) \leq r$ for $0 \leq i,j \leq n$; that is, if all the points are within a distance of $r$ from each other.
 \end{itemize}
 The simplicial complex is called the Vietoris-Rips complex and is denoted $VR_{r}(X)$.
 \end{definition}
@@ -273,11 +273,9 @@ We say that disjoint subsets $A_{1}...A_{k}$ of vertices $V$ in graph $G(V,E)$ a
 \end{enumerate}
 \end{definition}
 
-Given the input of $n$ $m$-dimensional points $X \in \mathbb{R}^{m}$ and a metric $d$ (in our case the eulidian distance) we build a VR-cx for parameter $r = r_{2}$, where $r_{2}$ is the biggest $r$ such that the VR-cx has three connected components. We find the parameter $r_{2}$ using a binary search on a set of all possible values of $r$. We then perform the classification, simply by saying that all the objects in some connected component belong to the same class. Seeing as we have three connected components in our VR-cx we will get three distinct classes.\\
+Given the input of $n$ $m$-dimensional points $X \in \mathbb{R}^{m}$ and a metric $d$ (in our case the Euclidean distance) we build a VR-cx for parameter $r = r_{2}$, where $r_{2}$ is the biggest $r$ such that the VR-cx has three connected components. We find the parameter $r_{2}$ using a binary search on a set of all possible suitable values of $r$. We then perform the classification, simply by saying that all the objects in some connected component belong to the same class. Seeing as we have three connected components in our VR-cx we will get three distinct classes.\\
 
-It does not take much thinking to see that our classification model will produce the exact same results regardless of whether we only use simplices of dimension $1$, or if we used all the simplices up to dimension $h$, where $h$ is an arbitrary number in the range $h \in 1...m$. This follows from Definition~\ref{defa}.\\
-
-The definition of VR-cx is taken from space~\cite{dyinglovegrape}.
+It does not take much thinking to see that our classification model will produce the exact same results regardless of whether we only use simplices of dimension $1$, or if we used all the simplices up to dimension $h$, where $h$ is an arbitrary number in the range $h \in 1\ldots n$. This follows from Definition~\ref{defa}.\\
 
 \label{sec:relationsl}
 \begin{homeworkSection}{Relation to single linkage clustering algorithm}
@@ -285,10 +283,10 @@ The definition of VR-cx is taken from space~\cite{dyinglovegrape}.
 
 Our intuition tells us, that the model we build using the VR-cx to classify the images, produces the same results as the well known single linkage clustering algorithm. In this section we aim to prove or at least give a strong intuition that this is indeed the case.
 
-Both algorithms take a set $X$ of $n$ samples with $m$ features as input. We can think of a sample $x$ in the set $X$ as a point in the $m$-dimensional space $x \in \mathbb{R}^{m}$. The algortihms then constructs a graph with points $X$ as the vertices ($V$) and edges $E$. The $k$ connected components in the constructed graph corespond to the classes of samples.
+Both algorithms take a set $X$ of $n$ samples with $m$ features as input. We can think of a sample $x$ in the set $X$ as a point in the $m$-dimensional space $x \in \mathbb{R}^{m}$. The algortihms then constructs a graph with points $X$ as the vertices $V$ and edges $E$. The $k$ connected components in the constructed graph corespond to the classes of samples.
 
 \begin{paragraph}{Single linkage algorithm.}
-The algorithm starts with $n$ connected components (no edges in the graph). n each step the algorithm chooses the two connected components that are closest to each according to some distance metric $d$ (in our case the euclidean distance) and joins them into one by adding an edge between their closest two vertices.
+The algorithm starts with $n$ connected components (no edges in the graph). At each step the algorithm chooses the two connected components that are closest to each according to some distance metric $d$ (e.g. Euclidean distance) and joins them by adding an edge between their closest two vertices.
 
 \begin{definition}
 The distance $D$ between two connected components $A$ and $B$ is defined as the distance of the pair of vertices (one from $A$ and one from $B$) that are closest to each other. More formally
@@ -300,7 +298,7 @@ The algorithm stops when there are only $k$ connected components left.
 \end{paragraph}
 
 \begin{paragraph}{Vietoris-Rips classification algorithm.}
-The algorithm builds a ($1$-dimensional) Vietoris-Rips complex $V_{r}(X)$ with parameter $r$. We choose the biggest $r$ such that the VR-cx $V_{r}(X)$ has $k$ connected components.
+The algorithm builds a ($1$-dimensional) Vietoris-Rips complex $VR_{r}(X)$ with parameter $r$. We choose the biggest $r$ such that the VR-cx $VR_{r}(X)$ has $k$ connected components.
 \end{paragraph}
 \\
 \\
@@ -332,7 +330,7 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
 
   Let us now consider the computational complexity of our model. Since we are only interested in Vietoris-Rips complexes $VR_r$ with simplices of dimension $1$, the simplest approach to construct such complex requires us to check the distance between every pair of vertices $(v_1, v_2) \in V \times V$, adding such pair to the final complex if the distance $d(v_1, v_2) \le r$. In worst case the algorithm would have to return all distinct pairs of vertices, meaning construction of $VR_r(V)$ requires $O(n^2)$ time and consumes $O(n^2)$ space, where $n$ is the number of vertices in $V$.
 
-  The problem is that we don't know the appropriate value for the parameter $r$. Recall that we are interested in finding biggest $r$, such that the Vietoris-Rips complex $VR_{r}$ has as many connected components as there are distinct classes of images. Let $r_{max}$ denote the largest distance between two vertices from $X$. Note that $r$ we are looking for will always be bounded on the interval $[0, r_{max}]$, and it will furthermore be exactly one of the distances between some pair of vertices. Thus we only have $n^2$ different possible values of $r$ we need to check, and if we sort them by size and use binary search to find the right one, we can do it in $O(n^2 \log n^2 + \log n^2) = O(n^2 \log n)$ time and $O(n^2)$ space. To count the number of connected components obtained with every different $VR$ complexes, we can use a \texttt{union-find} algorithm, which at worst adds $O(n^2)$ time to each run.
+  The problem is that we don't know the appropriate value for the parameter $r$. Recall that we are interested in finding biggest $r$, such that the Vietoris-Rips complex $VR_{r}$ has as many connected components as there are distinct classes of images. Let $r_{max}$ denote the largest distance between two vertices from $V$. Note that $r$ we are looking for will always be bounded on the interval $[0, r_{max}]$, and it will furthermore be exactly one of the distances between some pair of vertices. Thus we only have $n^2$ different possible values of $r$ we need to check, and if we sort them by size and use binary search to find the right one, we can do it in $O(n^2 \log n^2 + \log n^2) = O(n^2 \log n)$ time and $O(n^2)$ space. To count the number of connected components obtained with every different $VR$ complex, we can use a \texttt{union-find} algorithm, which at worst adds $O(n^2)$ time to each run.
 
   With this the final time complexity of our approach is $O(n^2 \log n^2 + (n^2 + n^2)\log n^2) = O(n^2 \log n)$ using $O(n^2)$ space. Contrast this with the computational complexity of single-linkage clustering, which with a clever implementation can in optimal case produce solution in $O(n^2)$ time and $O(n)$ space~\cite{gower1969minimum}.
 
@@ -347,11 +345,12 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
 \end{homeworkProblem}
 
 \begin{homeworkProblem}[Results]
+  In this section we present the results of Vietoris-Rips classification algorithm described in the previous section.
 
 \begin{homeworkSection}{Cup, paper, pen image set}
 
 \begin{paragraph}{Effect of preprocessing.}
-We were interested in observing the effect of the preprocessing methods on the samples of our dataset. For this purpose we visualized the data-points using multidimensional scaling technique (MDS)~\cite{borg2005modern}. MDS is a means of visualizing the level of similarity of individual cases from $N$-dimensional space, to a lower, $M$ dimensional space (in our case: $M=2$), while preserving between-object distances as well as possible. Therefore MDS plots are well suited for giving intuition of how separable data samples of different classes are. The obtained plots are shown in figure~\ref{fig:mds_preprocessing}. We notice that in both cases the points can be clearly separated into three clusters. We can also observe that points within clusters seem to lie closer together in the preprocessed plot than in the non preprocessed one. It should be mentioned that the position of points in a MDS plot is randomized, and that only distances between points should be observed. Therefore the reader should not confuse the different positions of each of the clusters in the plots as an effect of the preprocessing, since the reason for it is merely a property of the MDS method.
+We were interested in observing the effect of the preprocessing methods on the samples of our dataset. For this purpose we visualized the data-points using multidimensional scaling technique (MDS)~\cite{borg2005modern}. MDS is a means of visualizing the level of similarity of individual cases from $N$-dimensional space, to a lower, $M$ dimensional space (in our case: $M=2$), while preserving between-object distances as well as possible. Therefore MDS plots are well suited for giving intuition of how separable data samples of different classes are. The plots obtained for our dataset are shown in figure~\ref{fig:mds_preprocessing}. We notice that in both cases the points can be clearly separated into three clusters. We can also observe that points within clusters seem to lie closer together in the preprocessed plot than in the non preprocessed one. It should be mentioned that the position of points in a MDS plot is randomized, and that only distances between points should be observed. Therefore the reader should not confuse the different positions of each of the clusters in the plots as an effect of the preprocessing, since the reason for it is merely a property of the MDS method.
 
 \begin{figure}[t]
     \centering
@@ -370,7 +369,7 @@ We were interested in observing the effect of the preprocessing methods on the s
 
 \end{paragraph}
 
-\begin{paragraph}{Image classification.}  In this section we present the results of Vietoris-Rips classification algorithm described in the previous section.
+\begin{paragraph}{Image classification.}
 
 \begin{figure}[h]
     \centering
@@ -380,13 +379,13 @@ We were interested in observing the effect of the preprocessing methods on the s
 \end{figure}
 
 
-Initially we tested if the model is able to distinguish the images of cup, paper and pen. The images were preprocessed with scaling between values of $[-1, 1]$, as described in section Obtaining and preprocessing data, and a PCA transformation with $0.75$ explained variance. The VR-cx obtained is shown in fig~\ref{fig:vr_cx}. The model had no problems distinguishing between the three classes of images. Each one of the three connected components obtained was belonging to one of the three classes of images. This is not surprising as the three classes of points are clearly separable.
+Initially we tested if the model is able to distinguish the images of cup, paper and pen. The images were preprocessed with scaling of values to the interval $[-1, 1]$, as described in section Obtaining and preprocessing data, and a PCA transformation with $0.75$ explained variance. The VR-cx obtained is shown in fig~\ref{fig:vr_cx}. The model had no problems distinguishing between the three classes of images. Each one of the three connected components obtained was belonging to one of the three classes of images. This is not surprising as the three classes of points are clearly separable.
 \end{paragraph}
 
 \begin{figure}[h]
     \centering
     \includegraphics[height=5cm]{img/vr_princ}
-    \caption{Visualisation of the principal simplicies obtained by VR-cx on the cup, paper, and pen dataset.}
+    \caption{Visualisation of the principal simplices obtained by VR-cx on the cup, paper, and pen dataset.}
     \label{fig:vr_princ}
 \end{figure}
 
@@ -397,7 +396,7 @@ Initially we tested if the model is able to distinguish the images of cup, paper
     \label{fig:princ_barycenters}
 \end{figure}
 
-\begin{paragraph}{Principal simplices.} In constructed VR-cx we observed 14 principal simplicies (i.e. simplicies which are not faces of any bigger complex), which are shown in figure~\ref{fig:vr_princ}. We can notice that each of the principal simplicies is connecting points within same classes. In figure~\ref{fig:princ_barycenters} the images representing barycenteer points of each of the principal simplices are presented. It is interesting to see that there are as many principal simplicies connecting ``pen''-points, as there are ``paper'' and ``cup'' principal simplicies all together. The intuition for this is that since pen is a ``pointy'' object, small rotations of the image cause bigger changes in the image than if the object is rounder (which is the case with paper and cup images).
+\begin{paragraph}{Principal simplices.} In constructed VR-cx we observed 14 principal simplices (i.e. simplices which are not faces of any bigger complex), which are shown in figure~\ref{fig:vr_princ}. We can notice that each of the principal simplices is connecting points within same classes. In figure~\ref{fig:princ_barycenters} the images representing barycenter points of each of the principal simplices are presented. It is interesting to see that there are as many principal simplices connecting ``pen''-points, as there are ``paper'' and ``cup'' principal simplices all together. The intuition for this is that since pen is a ``pointy'' object, small rotations of the image cause bigger changes in the image than if the object is rounder (which is the case with paper and cup images).
 
 \end{paragraph}
 
@@ -463,13 +462,13 @@ The strong connection beetween the two algorithms however also implies, that our
 \end{paragraph}
 
 \begin{paragraph}{Using our model with other datasets.}
-  Of course our model can be used to classify (or cluster) datasets with completely different attributes. To prove the point, we tried it on the Iris dataset, which consists of 3 classes with 50 instances each, each class being a different type of Iris plant. There are 4 numeric attributes in total: sepal width and length of the flower, and its petal width and length  (all in centimeters). One of the classes is linearly separable from the other two, while the other two are very intertwined. 
+  Of course our model can be used to classify (or cluster) datasets with completely different attributes. To prove the point, we ran it on the Iris dataset, which consists of 3 classes with 50 instances each, with each class being a different type of Iris plant. There are 4 numeric attributes in total: sepal width and length of the flower, and its petal width and length  (all in centimeters). One of the classes is linearly separable from the other two, while the other two are very intertwined. 
 
   To verify that our model in fact works, we first ran it on Iris dataset and told it to simply find 2 clusters, which it successfully managed to do (it clustered the dataset into exactly the linearly separated class and the intertwined one). Telling it to find 3 clusters however did not work so well: while it was still able to properly cluster one class, it made a cluster out of both remaining ones and found a single ``outlier'' sample that was slightly further away from other samples.
 \end{paragraph}
 
 \begin{paragraph}{Modifying algorithm to prefer simplices of larger dimension.}  
-  Because we proved that our basic model that only considers simplices of dimension 1 produces identical results as single-linkage clustering algorithm, and because VR cx can produce simplices of higher dimensions, we wondered if we could somehow use those to increase robustness of our algorithm. The main idea is that if some vertices are present in a simplex of higher dimension, they are more likely to be a part of the same class (since all the points are bunched up closer together). Unfortunately this turned out to be useless in practice, as even simplices of higher dimension are still built based on some distance metric between points, and if two clusters of different classes are close enough together, they may form a simplex of very large dimension resulting in a incorrect classification. The idea also would not work too well on thin, long clusters as seen in figure \ref{fig:mds_preprocessing}. On top of everything, this would also add a second parameter (optimal dimension in addition to $r$), that the model has to balance out to produce desired number of clusters, and we would have to construct simplices of dimensions $\ge 1$ at each run of VR algorithm, further increasing the computational complexity with potentially no benefit.
+  Because we proved that our basic model that only considers simplices of dimension 1 produces identical results as single-linkage clustering algorithm, and because VR-cx can produce simplices of higher dimensions, we wondered if we could somehow use those to increase robustness of our algorithm. The main idea is that if some vertices are present in a simplex of higher dimension, they are also more likely to be a part of the same class (since all the points are bunched up closer together). Unfortunately this turned out to be useless in practice, as even simplices of higher dimension are still built based on some distance metric between points, and if two clusters of different classes are close enough together, they may form a simplex of very large dimension resulting in a incorrect classification. The idea also would not work too well on thin, long clusters as seen in figure \ref{fig:mds_preprocessing}. On top of everything, this would also add a second parameter (optimal dimension in addition to $r$), that the model has to balance out to produce desired number of clusters, and we would have to construct simplices of dimensions $\ge 1$ at each run of VR algorithm, further increasing the computational complexity with potentially no benefit.
 \end{paragraph}
 
 \end{homeworkSection}
@@ -477,9 +476,9 @@ The strong connection beetween the two algorithms however also implies, that our
 
 \begin{homeworkProblem}[Summary]
 
-  Classification of images using Vietoris-Rips complex is equivalent to one of the most basic hierarchical clustering algorithms, single-linkage clustering. It thus has the very same problems and is highly dependent on good preprocessing of the dataset into well separated groups. At the same time, it has a significantly worse performance in both time and space requirements.
+  Classification of images using Vietoris-Rips complex is equivalent to one of the most basic hierarchical clustering algorithms, single-linkage clustering. It thus has the very same problems and is highly dependent on good preprocessing of the dataset into well separated groups. At the same time, it also has significantly worse performance in both time and space requirements.
 
-  While additional intercluster connections that VR cx constructs are interesting from various viewpoints, we fail to see any practical value from them, especially in relation to our problem. We also are not sure about the usefulness of higher dimensional simplices, predominantly given how quickly they can increase time complexity and make the model unusable.
+  While additional intercluster connections that VR cx constructs are interesting from various viewpoints, we fail to see any practical value int hem, especially in relation to our problem. We also are not sure about the usefulness of higher dimensional simplices, predominantly given how quickly they can increase time complexity and make the model unusable.
 
 \end{homeworkProblem}
 
@@ -487,9 +486,9 @@ The strong connection beetween the two algorithms however also implies, that our
 
   Our project workload was split among the members fairly. We met biweekly and mostly worked together, sharing ideas and findings. To give a brief overview of what each member did:
   \begin{itemize}
-    \item P prepared preprocessing class (StandardScaler, PCA) and wrote a nice abstraction for VR-cx from Dionysus library, added MDS visualizations which were used to reason about the dataset, and played around testing different scalers to see what effect they have on separability of classes;
+    \item P prepared the preprocessing class (StandardScaler, PCA) and wrote a nice abstraction for calculating VR-cx with the help of Dionysus library, added MDS visualizations which were used to reason about the dataset, and played around testing different scalers to see what effect they have on separability of classes;
     \item R took the photographs, wrote a formal proof on the connection of our model to single-linkage clustering, helped with the implemetation of the final model and implemented step-by-step visualisation of building the model which was very useful in building our understanding of how it works and why it works the way it does; and finally
-    \item A implemented methods for loading and saving images, converted original images to grayscale, resized them and turned them into a dataset that could be used the model, and finally implemented the the model itself.
+    \item A implemented methods for loading and saving images, converted original images to grayscale, resized them and turned them into a dataset that could be used the model, came up with the intuitive link with single-linkage clustering, and also implemented the model itself.
   \end{itemize}
 \end{homeworkProblem}
 The analysis of the model and final results were a joint effort, as was writing this final report. A more detailed overview of each member's workload can be seen at github repository of our project: \url{https://github.com/ptrus/vietoris_rips_image_classification/commits/master}.
