@@ -335,10 +335,12 @@ Using Claim~\ref{claima} we see that the connected components in $G_{vr}$ and $G
 
 \begin{homeworkProblem}[Results]
 
-\begin{homeworkSection}{Effect of preprocessing}
+\begin{homeworkSection}{Cup, paper, pen image set}
+
+\begin{paragraph}{Effect of preprocessing}
 We were interested in observing the effect of the preprocessing methods on the samples of our dataset. For this purpose we visualized the data-points using multidimensional scaling technique (MDS)~\cite{borg2005modern}. MDS is a means of visualizing the level of similarity of individual cases from $N$-dimensional space, to a lower, $M$ dimensional space (in our case: $M=2$), while preserving between-object distances as good as possible. Therefore MDS plots are well suited for giving intuition how separable data samples of different classes are. The obtained plots are shown in figure~\ref{fig:mds_preprocessing}. We notice that in both cases the points can be clearly separated into three clusters. We can also observe that points within clusters seem to lie closer together in the preprocessed plot than in the non preprocessed one. It should be mentioned that the position of points in a MDS plot is randomized, and that only distances between points should be observed. Therefore the reader should not confuse the different positions of each of the clusters in the plots as an effect of the preprocessing, since the reason for it is merely a property of the MDS method.
 
-\begin{figure}[t!]
+\begin{figure}[t]
     \centering
     \begin{subfigure}[t]{0.4\textwidth}
         \centering
@@ -353,22 +355,37 @@ We were interested in observing the effect of the preprocessing methods on the s
   \label{fig:mds_preprocessing}
 \end{figure}
 
-\end{homeworkSection}
-
-  \todo{[P] Do the components of the complex V2 distinguish between the three classes? }
-
-
-\begin{homeworkSection}{Cup, paper, pen image set}
-In this section we present the results of Vietoris-Rips classification algorithm described in section~\ref{prob:model}. \todo{Why is the reference not working?}
-
-\begin{paragraph}{Image classification.}  Initially we tested if the model is able to distinguish the already mentioned images of cup, paper and pen. The images were preprocessed, as explained before, with scaling and a PCA transformation. The model had no problems distinguishing between the three classes of images. Each one of the three connected components obtained, was belonging to one of the three classes of images. This is not surprising since looking already mentioned MDS plots~\ref{fig:mds_preprocessing}, the three different classes of points are clearly separable.
 \end{paragraph}
 
-\begin{paragraph}{Principal simplices}
+\begin{paragraph}{Image classification.}  In this section we present the results of Vietoris-Rips classification algorithm described in section~\ref{prob:model}. \todo{Why is this reference not shown?}
 
-  \todo{[P] Do the prinicipal simplices (that is, the simplices which are not faces of any bigger
-simplex) of the complex V2 connect similar images? What does the image corresponding
-to the barycenter of such a simplex look like?}
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=5cm]{img/vr_cx}
+    \caption{Visualisation of the VR-cx on the cup, paper, and pen dataset.}
+    \label{fig:vr_cx}
+\end{figure}
+
+
+Initially we tested if the model is able to distinguish the already mentioned images of cup, paper and pen. The images were preprocessed, as explained before, with scaling and a PCA transformation. The VR-cx obtained is shown in fig~\ref{fig:vr_cx}. The model had no problems distinguishing between the three classes of images. Each one of the three connected components obtained, was belonging to one of the three classes of images. This is not surprising since looking already mentioned MDS plots~\ref{fig:mds_preprocessing}, the three different classes of points are clearly separable.
+\end{paragraph}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=5cm]{img/vr_princ}
+    \caption{Visualisation of the principal simplicies obtained by VR-cx on the cup, paper, and pen dataset.}
+    \label{fig:vr_princ}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=5cm]{img/princ}
+    \caption{Images representing inverse-tarnsformations of baycenter points of each of the principal simplices ordered by decreasing sizes of simplices.}
+    \label{fig:princ_barycenters}
+\end{figure}
+
+\begin{paragraph}{Principal simplices}are simplicies which are not faces of any bigger complex. In the built VR-cx we observed 14 principal simplicies, which are drawn in figure~\ref{fig:vr_princ}. We can notice that each of the principal simplicies is connecting points with same classes. In~\ref{fig:princ_barycenters} the barycenteer images of each of the simplicies is shown.
+\todo{Describe results}
 
   \todo{[A] Explain that simplices of larger dimension are just about useless}
 
@@ -376,10 +393,11 @@ to the barycenter of such a simplex look like?}
 \end{paragraph}
 
 
+\begin{paragraph}{Components differences}
   \todo{[A] Pick one (or several) edges in V1 which is not in V2 and reconstruct the image corresponding
 to the midpoint. This should somehow capture the difference between the
 two components connected by this edge. Does it?}
-
+\end{paragraph}
 
 
 \end{homeworkSection}
@@ -407,7 +425,7 @@ two components connected by this edge. Does it?}
 
   \todo{Write here about your work on the project and I ([A]) will then summarize it into a paragraph or two.}
   \begin{itemize}
-    \item P: Prepared Preprocessing class (StandardScaler, PCA), prepared VR cx, added MDS visualizations, tested different scalers.
+    \item P: Prepared Preprocessing class (StandardScaler, PCA), prepared VR-cx, added MDS visualizations, tested different scalers.
     \item R:
     \item A: Implemented methods for loading/saving images, preparing the dataset for use in the model, implemented the model, converted original images to grayscale and resized them,
   \end{itemize}

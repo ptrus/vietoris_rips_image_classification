@@ -46,12 +46,11 @@ def principal_sxs(cx):
     vs = map(set, cx_sorted)
     mask = [True] * len(vs)
     for i in range(len(vs)-1):
-        if mask[i]:
-            v1 = vs[i]
+        v1 = vs[i]
         for j in range(i+1, len(vs)):
             if mask[j]:
                 v2 = vs[j]
-                if len(v1.intersection(v2)) > 0:
+                if v1.issuperset(v2):
                     mask[j] = False
     return [cx for m,cx in zip(mask, cx_sorted) if m]
 
@@ -124,7 +123,7 @@ if __name__ == "__main__":
     plt.show()
     plot_points(cords, topo_pred) #plot points
     lines_plot(lines_tc, cords, color = "grey")
-    plt.show()
+    plt.savefig('./vr_cx.png')
     
 
     samples = np.array([0, 2, 7, 8, 9, 10, 13, 14, 15, 18, 20, 22, 23, 25, 28])
@@ -135,4 +134,18 @@ if __name__ == "__main__":
     ts = range(0, 100, 20) + [100]
     save_all_images(interpolate_edge(critical_edges()[-2], ts=ts), "edge1")
     save_all_images(interpolate_edge(critical_edges()[-1], ts=ts), "edge2")
-    print "princpals:", save_all_images([sx_mean2(sx) for sx in principal_sxs(all_sxs())], "princ")
+    princ = principal_sxs(all_sxs())
+    print "Principal sxs:", len(princ)
+    plot_points(cords, topo_pred)
+    k=0
+    c = "ycmkwycmkwycmkw" 
+    for p in princ:
+        princ_edges = []
+        for i in range(len(p)-1):
+            for j in range(i + 1, len(p)):
+                princ_edges.append([p[i], p[j]])
+        lines_plot(princ_edges, cords, color=c[k]) 
+        if len(p) > 1:
+            k += 1
+    plt.savefig('./vr_princ.png') 
+    print "princpals:", save_all_images([sx_mean2(sx) for sx in princ], "princ")
