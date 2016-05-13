@@ -275,7 +275,9 @@ We say that disjoint subsets $A_{1}...A_{k}$ of vertices $V$ in graph $G(V,E)$ a
 
 Given the input of $n$ $m$-dimensional points $X \in \mathbb{R}^{m}$ and a metric $d$ (in our case the eulidian distance) we build a VR-cx for parameter $r = r_{2}$, where $r_{2}$ is the biggest $r$ such that the VR-cx has three connected components. We find the parameter $r_{2}$ using a binary search on a set of all possible values of $r$. We then perform the classification, simply by saying that all the objects in some connected component belong to the same class. Seeing as we have three connected components in our VR-cx we will get three distinct classes.\\
 
-It does not take much thinking to see that our classification model will produce the exact same results regardless of whether we only use simplices of dimension $1$, or if we used all the simplices up to dimension $h$, where $h$ is an arbitrary number in the range $h \in 1...m$. This follows from Definition~\ref{defa}.
+It does not take much thinking to see that our classification model will produce the exact same results regardless of whether we only use simplices of dimension $1$, or if we used all the simplices up to dimension $h$, where $h$ is an arbitrary number in the range $h \in 1...m$. This follows from Definition~\ref{defa}.\\
+
+The definition of VR-cx is taken from space~\cite{dyinglovegrape}.
 
 \label{sec:relationsl}
 \begin{homeworkSection}{Relation to single linkage clustering algorithm}
